@@ -30,6 +30,7 @@ fun LoginScreen(modifier: Modifier) {
 //            modifier = Modifier.fillMaxWidth(),
 //            alignment = Alignment.Center
 //        )
+
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.Person),
             contentDescription = "login_image",
