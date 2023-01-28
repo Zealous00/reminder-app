@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
-import com.fekete.david.reminderapp.ui.payment.PaymentScreen
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
 
 @Composable
