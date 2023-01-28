@@ -7,20 +7,32 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
+import com.fekete.david.reminderapp.ui.payment.PaymentScreen
+import com.fekete.david.reminderapp.ui.profile.ProfileScreen
 
 @Composable
 fun ReminderApp(
-    appState: ReminderAppState = rememberReminderAppState()
+    appState: ReminderAppState = rememberReminderAppState(),
+    modifier: Modifier
 ) {
     NavHost(
         navController = appState.navController,
         startDestination = "login"
-    ){
-        composable(route = "login"){
-            LoginScreen(navController = appState.navController, modifier = Modifier.fillMaxSize())
+    ) {
+        composable(route = "login") {
+            LoginScreen(modifier = modifier, navController = appState.navController)
+//            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
         }
-        composable(route = "home"){
-            HomeScreen(navController = appState.navController, modifier = Modifier.fillMaxSize())
+        composable(route = "home") {
+            HomeScreen(modifier = modifier, navController = appState.navController)
         }
+        composable(route = "profile") {
+            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
+        }
+        /*
+        TODO: - main screen layout
+              - checking password
+        * */
+
     }
 }
