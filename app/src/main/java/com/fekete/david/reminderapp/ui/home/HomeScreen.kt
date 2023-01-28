@@ -26,40 +26,6 @@ fun HomeScreen(
         HomeContent(
             navController = navController
         )
-//        Column(
-//            modifier = modifier.fillMaxHeight(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            LazyColumn(
-//                modifier = Modifier
-//                    .fillMaxHeight(0.92f)
-//                    .fillMaxWidth()
-//                    .background(color = Color.Yellow),
-//                horizontalAlignment = Alignment.CenterHorizontally,
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                Lazy("This is the home screen bitches")
-//            }
-//            Row(
-//                modifier = Modifier
-////                    .fillMaxHeight(0.1f)
-//                    .fillMaxWidth()
-////                    .padding(5.dp)
-//                    .background(color = Color.Red),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.Center
-//            ) {
-////        Text(text = "Profile")
-//                IconButton(onClick = { navController.navigate("profile") }) {
-//                    Icon(
-//                        painter = rememberVectorPainter(image = Icons.Filled.Person),
-//                        contentDescription = "",
-//                        modifier = Modifier.size(35.dp)
-//                    )
-//                }
-//            }
-
     }
 }
 
@@ -86,6 +52,7 @@ fun HomeContent(
         ) {
             val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
             HomeAppBar(backgroundColor = appBarColor, navController = navController)
+            Reminders()
         }
     }
 }
