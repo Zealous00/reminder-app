@@ -14,9 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(modifier: Modifier) {
+fun LoginScreen(
+    modifier: Modifier,
+    navController: NavController
+) {
     val userName = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     Column(
@@ -34,7 +38,9 @@ fun LoginScreen(modifier: Modifier) {
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.Person),
             contentDescription = "login_image",
-            modifier = Modifier.fillMaxWidth().size(150.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(150.dp),
         )
         Spacer(
             modifier = Modifier.height(10.dp)
@@ -61,8 +67,10 @@ fun LoginScreen(modifier: Modifier) {
             modifier = Modifier.height(30.dp)
         )
         Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
+            onClick = { navController.navigate("home") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
             shape = RoundedCornerShape(corner = CornerSize(50.dp))
         ) {
             Text(text = "Login")
