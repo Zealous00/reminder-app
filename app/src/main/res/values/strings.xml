@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ReminderApp</string>
+    <string name="account">Account</string>
 </resources>

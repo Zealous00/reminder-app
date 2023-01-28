@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.fekete.david.reminderapp.R
 
 @Composable
 fun HomeScreen(
@@ -79,6 +81,37 @@ fun HomeContent(
             }
         }
     ) {
-
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val appBarColor = MaterialTheme.colors.surface.copy(alpha = 0.87f)
+            HomeAppBar(backgroundColor = appBarColor, navController = navController)
+        }
     }
+}
+
+@Composable
+private fun HomeAppBar(backgroundColor: Color, navController: NavController) {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.app_name),
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .height(24.dp)
+            )
+        },
+        backgroundColor = backgroundColor,
+        actions = {
+            IconButton(onClick = { navController.navigate("profile") }) {
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.Person),
+                    contentDescription = stringResource(R.string.account),
+                    modifier = Modifier.size(35.dp)
+                )
+            }
+        }
+    )
+
 }
