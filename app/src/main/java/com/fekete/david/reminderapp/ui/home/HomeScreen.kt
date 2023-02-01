@@ -39,9 +39,9 @@ fun HomeContent(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { /*TODO*/ },
-                modifier = Modifier.padding(all = 20.dp),
+//                modifier = Modifier.padding(all = 10.dp),
                 contentColor = Color.Black,
-                backgroundColor = Color.Red
+                backgroundColor = Color.Green
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
