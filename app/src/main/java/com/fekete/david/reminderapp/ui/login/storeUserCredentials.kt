@@ -34,4 +34,9 @@ class storeUserCredentials(private val context: Context) {
         )
     }
 
+    fun isKeyStored(key: Preferences.Key<String>): Flow<Boolean>  =
+        context.dataStore.data.map {
+                preference -> preference.contains(key)
+        }
+
 }

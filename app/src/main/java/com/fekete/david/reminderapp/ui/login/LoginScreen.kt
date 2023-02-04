@@ -1,5 +1,6 @@
 package com.fekete.david.reminderapp.ui.login
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -14,8 +15,10 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.data.entitiy.User
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -31,11 +34,8 @@ fun LoginScreen(
 
     val userName = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("a", "b"))
-//    val user = User(
-//        username = savedUser,
-//            password =
-//    )
+
+    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", ""))
 
     Column(
         modifier = modifier.padding(20.dp),
@@ -90,6 +90,11 @@ fun LoginScreen(
 //                        )
 //                    )
 //                }
+                if (userName.value.equals(savedUser.value?.username) &&
+                    password.value.equals(savedUser.value?.password)
+                ) {
+                    navController.navigate("home")
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -98,6 +103,9 @@ fun LoginScreen(
         ) {
             Text(text = "Login")
         }
-        Text(text = savedUser.value?.username + "" + savedUser.value?.password)
+        val shit = password.value.equals(savedUser.value?.password)
+        Text(text = savedUser.value?.username + " " + savedUser.value?.password)
+//        Text(text = userName.value + " " + password)
+//        Text(text = shit.toString())
     }
 }
