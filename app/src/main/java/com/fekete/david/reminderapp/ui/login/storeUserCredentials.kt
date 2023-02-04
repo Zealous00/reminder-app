@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 
-class storeUserCredentials(private val context: Context) {
+class StoreUserCredentials(private val context: Context) {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user")
         private val USERNAME_KEY = stringPreferencesKey("username")
         private val PASSWORD_KEY = stringPreferencesKey("password")
+        private val PHONE_NUMBER_KEY = stringPreferencesKey("phonenumber")
     }
 
 
@@ -24,13 +25,15 @@ class storeUserCredentials(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[USERNAME_KEY] = user.username
             preferences[PASSWORD_KEY] = user.password
+            preferences[PHONE_NUMBER_KEY] = user.phoneNumber
         }
     }
 
     val getUserFromDataStore: Flow<User?> = context.dataStore.data.map { preferences ->
         User(
             username = preferences[USERNAME_KEY] ?: "",
-            password = preferences[PASSWORD_KEY] ?: ""
+            password = preferences[PASSWORD_KEY] ?: "",
+            phoneNumber = preferences[PHONE_NUMBER_KEY] ?: ""
         )
     }
 

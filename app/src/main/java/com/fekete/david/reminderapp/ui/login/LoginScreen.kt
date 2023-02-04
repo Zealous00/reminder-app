@@ -30,12 +30,12 @@ fun LoginScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val dataStore = storeUserCredentials(context = context)
+    val dataStore = StoreUserCredentials(context = context)
 
     val userName = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", ""))
+    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", ""))
 
     Column(
         modifier = modifier.padding(20.dp),
@@ -86,7 +86,8 @@ fun LoginScreen(
 //                    dataStore.saveUserCredentials(
 //                        User(
 //                            username = userName.value,
-//                            password = password.value
+//                            password = password.value,
+//                            phoneNumber = "+420911234567"
 //                        )
 //                    )
 //                }

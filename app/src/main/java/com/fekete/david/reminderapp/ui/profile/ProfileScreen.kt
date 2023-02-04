@@ -10,6 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fekete.david.reminderapp.R
+import com.fekete.david.reminderapp.data.entitiy.User
+import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
 import org.w3c.dom.Text
 
 @Composable
@@ -95,6 +100,9 @@ fun PicturePart(modifier: Modifier) {
 
 @Composable
 fun DataPart(modifier: Modifier) {
+    val context = LocalContext.current
+    val dataStore = StoreUserCredentials(context = context)
+    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", ""))
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -146,7 +154,7 @@ fun DataPart(modifier: Modifier) {
             ) {
                 Text(
 //                color = Color.Black,
-                    text = "This is the nickname",
+                    text = savedUser.value?.username + "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -168,7 +176,7 @@ fun DataPart(modifier: Modifier) {
             ) {
                 Text(
 //                color = Color.Black,
-                    text = "This is the phone number",
+                    text = savedUser.value?.phoneNumber + "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
