@@ -1,8 +1,8 @@
 package com.fekete.david.reminderapp
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fekete.david.reminderapp.ui.home.HomeScreen
@@ -19,7 +19,7 @@ fun ReminderApp(
         startDestination = "login"
     ) {
         composable(route = "login") {
-            LoginScreen(modifier = modifier, navController = appState.navController)
+            LoginScreen(modifier = modifier, navController = appState.navController, context = LocalContext)
 //            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
         }
         composable(route = "home") {
