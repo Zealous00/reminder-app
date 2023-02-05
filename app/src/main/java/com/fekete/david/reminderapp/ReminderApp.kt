@@ -23,7 +23,7 @@ fun ReminderApp(
             LoginScreen(
                 modifier = modifier,
                 navController = appState.navController,
-                context = LocalContext
+                context = LocalContext.current
             )
 //            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
         }
@@ -37,7 +37,8 @@ fun ReminderApp(
             RegistrationScreen(
                 modifier = modifier,
                 navController = appState.navController,
-                context = LocalContext
+                context = LocalContext,
+                onBackPress = { appState.navigateBack() }
             )
         }
 

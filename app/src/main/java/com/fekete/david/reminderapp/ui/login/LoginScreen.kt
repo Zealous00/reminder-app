@@ -1,10 +1,8 @@
 package com.fekete.david.reminderapp.ui.login
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,35 +13,28 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.data.entitiy.User
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     modifier: Modifier,
     navController: NavController,
-    context: ProvidableCompositionLocal<Context>
+    context: Context
 ) {
-    val context = LocalContext.current
+
     val scope = rememberCoroutineScope()
 
     val dataStore = StoreUserCredentials(context = context)
@@ -110,12 +101,24 @@ fun LoginScreen(
                 if (isPinCodeLogin.value) {
                     if (pincode.value.equals(savedUser.value?.pincode)) {
                         navController.navigate("home")
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Pin code is not correct!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
                     if (userName.value.equals(savedUser.value?.username) &&
                         password.value.equals(savedUser.value?.password)
                     ) {
                         navController.navigate("home")
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Username or password is not correct!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             },
@@ -131,7 +134,7 @@ fun LoginScreen(
             modifier = Modifier.height(16.dp)
         )
         Text(
-            text = "Dont't have an coount?",
+            text = "Dont't have an account?",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
