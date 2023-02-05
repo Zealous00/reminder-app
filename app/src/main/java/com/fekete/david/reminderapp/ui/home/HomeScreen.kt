@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -75,6 +76,14 @@ private fun HomeAppBar(backgroundColor: Color, navController: NavController) {
                 Icon(
                     painter = rememberVectorPainter(image = Icons.Filled.Person),
                     contentDescription = stringResource(R.string.account),
+                    modifier = Modifier.size(35.dp)
+                )
+            }
+
+            IconButton(onClick = { navController.navigate("login") }) {
+                Icon(
+                    painter = rememberVectorPainter(image = Icons.Filled.ExitToApp),
+                    contentDescription = stringResource(R.string.logout),
                     modifier = Modifier.size(35.dp)
                 )
             }

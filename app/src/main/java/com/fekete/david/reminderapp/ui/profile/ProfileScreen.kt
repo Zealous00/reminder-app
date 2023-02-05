@@ -102,7 +102,7 @@ fun PicturePart(modifier: Modifier) {
 fun DataPart(modifier: Modifier) {
     val context = LocalContext.current
     val dataStore = StoreUserCredentials(context = context)
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", ""))
+    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", ""))
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,

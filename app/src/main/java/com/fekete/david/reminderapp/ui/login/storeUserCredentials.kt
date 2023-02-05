@@ -18,6 +18,7 @@ class StoreUserCredentials(private val context: Context) {
         private val USERNAME_KEY = stringPreferencesKey("username")
         private val PASSWORD_KEY = stringPreferencesKey("password")
         private val PHONE_NUMBER_KEY = stringPreferencesKey("phonenumber")
+        private val PIN_CODE_KEY = stringPreferencesKey("pincode")
     }
 
 
@@ -26,6 +27,7 @@ class StoreUserCredentials(private val context: Context) {
             preferences[USERNAME_KEY] = user.username
             preferences[PASSWORD_KEY] = user.password
             preferences[PHONE_NUMBER_KEY] = user.phoneNumber
+            preferences[PIN_CODE_KEY] = user.pincode
         }
     }
 
@@ -33,13 +35,13 @@ class StoreUserCredentials(private val context: Context) {
         User(
             username = preferences[USERNAME_KEY] ?: "",
             password = preferences[PASSWORD_KEY] ?: "",
-            phoneNumber = preferences[PHONE_NUMBER_KEY] ?: ""
+            phoneNumber = preferences[PHONE_NUMBER_KEY] ?: "",
+            pincode = preferences[PIN_CODE_KEY] ?: ""
         )
     }
 
-    fun isKeyStored(key: Preferences.Key<String>): Flow<Boolean>  =
-        context.dataStore.data.map {
-                preference -> preference.contains(key)
+    fun isKeyStored(key: Preferences.Key<String>): Flow<Boolean> =
+        context.dataStore.data.map { preference ->
+            preference.contains(key)
         }
-
 }

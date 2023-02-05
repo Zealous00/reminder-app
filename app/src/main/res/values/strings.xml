@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ReminderApp</string>
     <string name="account">Account</string>
+    <string name="logout">Logout</string>
 </resources>
