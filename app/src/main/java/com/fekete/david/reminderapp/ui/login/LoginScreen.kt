@@ -52,7 +52,7 @@ fun LoginScreen(
     val pincode = remember { mutableStateOf("") }
     val isPinCodeLogin = remember { mutableStateOf(false) }
 
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", ""))
+    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
 
     Column(
         modifier = modifier.padding(20.dp),

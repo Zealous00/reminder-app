@@ -1,5 +1,8 @@
 package com.fekete.david.reminderapp.ui.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -8,40 +11,44 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Person
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
-import org.w3c.dom.Text
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier,
     onBackPress: () -> Unit
+
 ) {
+    val context = LocalContext.current
+    val dataStore = StoreUserCredentials(context = context)
+    val savedUser =
+        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
     Surface() {
         Column {
             TopAppBar() {
-                IconButton(onClick = onBackPress) {
+                IconButton(
+                    onClick = saveUser(
+                        user = savedUser,
+                        dataStore = dataStore,
+                        onBackPress = onBackPress
+                    )
+                ) {
                     Icon(
                         painter = rememberVectorPainter(image = Icons.Default.ArrowBack),
                         contentDescription = ""
@@ -53,56 +60,102 @@ fun ProfileScreen(
             Column(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                PicturePart(
+                ImagePart(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = MaterialTheme.colors.primary)
-                        .weight(0.5f)
+                        .weight(0.5f),
+                    user = savedUser,
+                    dataStore = dataStore
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DataPart(
                     modifier = Modifier
                         .fillMaxWidth()
 //                        .background(color = Color.Red)
-                        .weight(1f)
+                        .weight(1f),
+                    user = savedUser
                 )
             }
         }
     }
 }
 
+fun saveUser(
+    user: State<User?>,
+    dataStore: StoreUserCredentials,
+    onBackPress: () -> Unit
+): () -> Unit {
+    return onBackPress
+}
+
 
 @Composable
-fun PicturePart(modifier: Modifier) {
+fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCredentials) {
+//    var imageUri = remember { dataStore.getImageUri ?: "" }
+    var imageUri = rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    val painter = rememberAsyncImagePainter(
+        if (imageUri.value == "") {
+            R.drawable.ic_user
+        } else {
+            imageUri.value
+        }
+    )
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            scope.launch { dataStore.setImageUri(uri.toString()) }
+            imageUri.value = it.toString()
+        }
+    }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.size(150.dp),
+        Card(
             shape = CircleShape,
-            border = BorderStroke(5.dp, Color.Black),
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+            modifier = Modifier
+                .size(150.dp)
+                .padding(8.dp),
         ) {
-            Icon(
-                painter = rememberVectorPainter(image = Icons.Rounded.Person),
-//                            tint = Color.Black,
-                contentDescription = stringResource(R.string.account),
-                modifier = Modifier.size(100.dp)
+            Image(
+                painter = painter,
+                contentDescription = "",
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable {
+                        launcher.launch("image/*")
+                    },
+                contentScale = ContentScale.Crop
             )
         }
+//        OutlinedButton(
+//            onClick = { launcher.launch("image/*") },
+//            modifier = Modifier
+//                .size(150.dp),
+//            shape = CircleShape,
+//            border = BorderStroke(5.dp, Color.Black),
+//            contentPadding = PaddingValues(0.dp),
+////            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+//        ) {
+//            Image(
+//                painter = painter,
+//                contentDescription = "",
+//                modifier = Modifier
+//                    .clip(CircleShape),
+////                    .clickable { launcher.launch("image/*") },
+//                contentScale = ContentScale.Crop
+//            )
+//        }
 
     }
 }
 
 @Composable
-fun DataPart(modifier: Modifier) {
-    val context = LocalContext.current
-    val dataStore = StoreUserCredentials(context = context)
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", ""))
+fun DataPart(modifier: Modifier, user: State<User?>) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -154,7 +207,7 @@ fun DataPart(modifier: Modifier) {
             ) {
                 Text(
 //                color = Color.Black,
-                    text = savedUser.value?.username + "",
+                    text = user.value?.username + "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -176,7 +229,7 @@ fun DataPart(modifier: Modifier) {
             ) {
                 Text(
 //                color = Color.Black,
-                    text = savedUser.value?.phoneNumber + "",
+                    text = user.value?.phoneNumber + "",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,

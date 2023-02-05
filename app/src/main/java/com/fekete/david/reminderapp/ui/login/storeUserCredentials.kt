@@ -19,6 +19,7 @@ class StoreUserCredentials(private val context: Context) {
         private val PASSWORD_KEY = stringPreferencesKey("password")
         private val PHONE_NUMBER_KEY = stringPreferencesKey("phonenumber")
         private val PIN_CODE_KEY = stringPreferencesKey("pincode")
+        private val IMAGE_URI_KEY = stringPreferencesKey("imageuri")
     }
 
 
@@ -28,7 +29,53 @@ class StoreUserCredentials(private val context: Context) {
             preferences[PASSWORD_KEY] = user.password
             preferences[PHONE_NUMBER_KEY] = user.phoneNumber
             preferences[PIN_CODE_KEY] = user.pincode
+            preferences[IMAGE_URI_KEY] = user.imageUri
         }
+    }
+
+    val getUserName: Flow<String>
+        get() = context.dataStore.data.map {
+            it[USERNAME_KEY] ?: ""
+        }
+
+    suspend fun setUserName(value: String) {
+        context.dataStore.edit { it[PASSWORD_KEY] = value }
+    }
+
+    val getPassword: Flow<String>
+        get() = context.dataStore.data.map {
+            it[USERNAME_KEY] ?: ""
+        }
+
+    suspend fun setPassword(value: String) {
+        context.dataStore.edit { it[PASSWORD_KEY] = value }
+    }
+
+    val getPhoneNumber: Flow<String>
+        get() = context.dataStore.data.map {
+            it[PHONE_NUMBER_KEY] ?: ""
+        }
+
+    suspend fun setPhoneNumber(value: String) {
+        context.dataStore.edit { it[PHONE_NUMBER_KEY] = value }
+    }
+
+    val getPinCode: Flow<String>
+        get() = context.dataStore.data.map {
+            it[PIN_CODE_KEY] ?: ""
+        }
+
+    suspend fun setPinCode(value: String) {
+        context.dataStore.edit { it[PIN_CODE_KEY] = value }
+    }
+
+    val getImageUri: Flow<String>
+        get() = context.dataStore.data.map {
+            it[IMAGE_URI_KEY] ?: ""
+        }
+
+    suspend fun setImageUri(value: String) {
+        context.dataStore.edit { it[IMAGE_URI_KEY] = value }
     }
 
     val getUserFromDataStore: Flow<User?> = context.dataStore.data.map { preferences ->
@@ -36,7 +83,8 @@ class StoreUserCredentials(private val context: Context) {
             username = preferences[USERNAME_KEY] ?: "",
             password = preferences[PASSWORD_KEY] ?: "",
             phoneNumber = preferences[PHONE_NUMBER_KEY] ?: "",
-            pincode = preferences[PIN_CODE_KEY] ?: ""
+            pincode = preferences[PIN_CODE_KEY] ?: "",
+            imageUri = preferences[IMAGE_URI_KEY] ?: ""
         )
     }
 
