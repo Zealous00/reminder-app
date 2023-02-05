@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
+import com.fekete.david.reminderapp.ui.registration.RegistrationScreen
 
 @Composable
 fun ReminderApp(
@@ -19,7 +20,11 @@ fun ReminderApp(
         startDestination = "login"
     ) {
         composable(route = "login") {
-            LoginScreen(modifier = modifier, navController = appState.navController, context = LocalContext)
+            LoginScreen(
+                modifier = modifier,
+                navController = appState.navController,
+                context = LocalContext
+            )
 //            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
         }
         composable(route = "home") {
@@ -28,10 +33,13 @@ fun ReminderApp(
         composable(route = "profile") {
             ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
         }
-        /*
-        TODO: - main screen layout
-              - checking password
-        * */
+        composable(route = "registration") {
+            RegistrationScreen(
+                modifier = modifier,
+                navController = appState.navController,
+                context = LocalContext
+            )
+        }
 
     }
 }

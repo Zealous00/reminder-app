@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,7 +53,8 @@ fun LoginScreen(
     val pincode = remember { mutableStateOf("") }
     val isPinCodeLogin = remember { mutableStateOf(false) }
 
-    val savedUser = dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
+    val savedUser =
+        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
 
     Column(
         modifier = modifier.padding(20.dp),
@@ -124,7 +126,27 @@ fun LoginScreen(
         ) {
             Text(text = "Login")
         }
-        Text(text = savedUser.value?.username + " " + savedUser.value?.password + " " + savedUser.value?.pincode)
+//        Text(text = savedUser.value?.username + " " + savedUser.value?.password + " " + savedUser.value?.pincode)
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+        Text(
+            text = "Dont't have an coount?",
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+        Spacer(
+            modifier = Modifier.height(4.dp)
+        )
+        Text(
+            text = "Register now!",
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { navController.navigate("registration") },
+            color = Color.Blue,
+            textAlign = TextAlign.Center
+        )
+
 //        Text(text = userName.value + " " + password)
 //        Text(text = shit.toString())
     }
