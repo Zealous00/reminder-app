@@ -135,7 +135,7 @@ fun LoginScreen(
             modifier = Modifier.height(16.dp)
         )
         Text(
-            text = "Dont't have an account?",
+            text = "Don't have an account?",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
