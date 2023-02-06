@@ -11,11 +11,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.User
@@ -32,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     modifier: Modifier,
+    navController: NavController,
     onBackPress: () -> Unit
 
 ) {
@@ -64,7 +69,7 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = MaterialTheme.colors.primary)
-                        .weight(0.5f),
+                        .weight(0.4f),
                     user = savedUser,
                     dataStore = dataStore
                 )
@@ -73,8 +78,9 @@ fun ProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
 //                        .background(color = Color.Red)
-                        .weight(1f),
-                    user = savedUser
+                        .weight(0.6f),
+                    user = savedUser,
+                    navController = navController
                 )
             }
         }
@@ -118,7 +124,7 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
         Card(
             shape = CircleShape,
             modifier = Modifier
-                .size(150.dp)
+                .size(170.dp)
                 .padding(8.dp),
         ) {
             Image(
@@ -126,11 +132,18 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
                 contentDescription = "",
                 modifier = Modifier
                     .clip(CircleShape)
+                    .padding(16.dp)
+//                    .size(50.dp)
                     .clickable {
                         launcher.launch("image/*")
                     },
                 contentScale = ContentScale.Crop
             )
+//            Icon(
+//                painter = rememberVectorPainter(image = Icons.Filled.Person),
+//                contentDescription = "login_image",
+//                modifier = Modifier.padding(16.dp)
+//            )
         }
 //        OutlinedButton(
 //            onClick = { launcher.launch("image/*") },
@@ -155,7 +168,7 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
 }
 
 @Composable
-fun DataPart(modifier: Modifier, user: State<User?>) {
+fun DataPart(modifier: Modifier, user: State<User?>, navController: NavController) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -164,81 +177,109 @@ fun DataPart(modifier: Modifier, user: State<User?>) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.4f),
+                .weight(1.0f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
-            Card(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f),
-                shape = RoundedCornerShape(corner = CornerSize(50.dp)),
-                border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
+                    .fillMaxWidth()
+                    .weight(0.2f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f),
+                    shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+                    border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
+                ) {
+                    Text(
 //                color = Color.Black,
-                    text = "Profile details",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
+                        text = "Profile details",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.6f),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Nickname",
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(4.dp)
+                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f),
+                    shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+                    border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
+                ) {
+                    Text(
+//                color = Color.Black,
+                        text = user.value?.username + "",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Phone number",
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(4.dp)
+                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f),
+                    shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+                    border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
+                ) {
+                    Text(
+//                color = Color.Black,
+                        text = user.value?.phoneNumber + "",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.2f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Button(
+                    onClick = { navController.navigate("login") },
+                    modifier = Modifier
+                        .fillMaxWidth(0.9f)
+                        .height(50.dp),
+                    shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                ) {
+                    Text(text = "Logout")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
 
         }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Nickname",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(4.dp)
-            )
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f),
-                shape = RoundedCornerShape(corner = CornerSize(50.dp)),
-                border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
-            ) {
-                Text(
-//                color = Color.Black,
-                    text = user.value?.username + "",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Phone number",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(4.dp)
-            )
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f),
-                shape = RoundedCornerShape(corner = CornerSize(50.dp)),
-                border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
-            ) {
-                Text(
-//                color = Color.Black,
-                    text = user.value?.phoneNumber + "",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-
-        }
-
-
     }
+
+
 }

@@ -22,20 +22,21 @@ import java.util.*
 @Composable
 fun Reminders() {
     val reminderList: List<Reminder> = listOf(
-        Reminder(1, "Buy some meat", Date(12345)),
-        Reminder(2, "Dont forget the laundry", Date(6789)),
-        Reminder(3, "Buy some meat", Date(12345)),
-        Reminder(4, "Dont forget the laundry", Date(6789)),
-        Reminder(5, "Buy some meat", Date(12345)),
-        Reminder(6, "Dont forget the laundry", Date(6789)),
-        Reminder(7, "Buy some meat", Date(12345)),
-        Reminder(8, "Dont forget the laundry", Date(6789)),
-        Reminder(9, "Buy some meat", Date(12345)),
-        Reminder(10, "Dont forget the laundry", Date(6789)),
-        Reminder(12, "Buy some meat", Date(12345)),
-        Reminder(12, "Dont forget the laundry", Date(6789)),
-        Reminder(13, "Buy some meat", Date(12345)),
-        Reminder(14 , "Dont forget the laundry", Date(6789)),
+        Reminder(1, "Buy some meat", Date(1675698752138)),
+        Reminder(2, "Dont forget the laundry", Date(1575678752138)),
+        Reminder(3, "Take out the trash", Date(1675698752138)),
+        Reminder(4, "Dentist", Date(1675698752138)),
+        Reminder(5, "Take the dog for a walk", Date(1675698752138)),
+        Reminder(6, "Buy some meat", Date(1675698752138)),
+        Reminder(7, "Dont forget the laundry", Date(1575678752138)),
+        Reminder(8, "Take out the trash", Date(1675698752138)),
+        Reminder(9, "Dentist", Date(1675698752138)),
+        Reminder(10, "Take the dog for a walk", Date(1675698752138)),
+        Reminder(11, "Buy some meat", Date(1675698752138)),
+        Reminder(12, "Dont forget the laundry", Date(1575678752138)),
+        Reminder(13, "Take out the trash", Date(1675698752138)),
+        Reminder(14, "Dentist", Date(1675698752138)),
+        Reminder(15, "Take the dog for a walk", Date(1675698752138)),
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {

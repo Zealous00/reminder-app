@@ -31,7 +31,10 @@ fun ReminderApp(
             HomeScreen(modifier = modifier, navController = appState.navController)
         }
         composable(route = "profile") {
-            ProfileScreen(modifier = modifier, onBackPress = { appState.navigateBack() })
+            ProfileScreen(
+                modifier = modifier,
+                navController = appState.navController,
+                onBackPress = { appState.navigateBack() })
         }
         composable(route = "registration") {
             RegistrationScreen(

@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -60,7 +61,7 @@ fun LoginScreen(
 //        )
 
         Icon(
-            painter = rememberVectorPainter(image = Icons.Filled.Person),
+            painter = rememberVectorPainter(image = Icons.Filled.Notifications),
             contentDescription = "login_image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -84,7 +85,7 @@ fun LoginScreen(
 
 
         Spacer(
-            modifier = Modifier.height(30.dp)
+            modifier = Modifier.height(16.dp)
         )
         Button(
             onClick = {
@@ -101,7 +102,7 @@ fun LoginScreen(
                 if (isPinCodeLogin.value) {
                     if (pincode.value.equals(savedUser.value?.pincode)) {
                         navController.navigate("home")
-                    }else{
+                    } else {
                         Toast.makeText(
                             context,
                             "Pin code is not correct!",
@@ -113,7 +114,7 @@ fun LoginScreen(
                         password.value.equals(savedUser.value?.password)
                     ) {
                         navController.navigate("home")
-                    }else{
+                    } else {
                         Toast.makeText(
                             context,
                             "Username or password is not correct!",
@@ -149,9 +150,6 @@ fun LoginScreen(
             color = Color.Blue,
             textAlign = TextAlign.Center
         )
-
-//        Text(text = userName.value + " " + password)
-//        Text(text = shit.toString())
     }
 }
 
@@ -186,16 +184,33 @@ fun PinCodeLoginOption(
         }
     )
     Spacer(
-        modifier = Modifier.height(10.dp)
+        modifier = Modifier.height(24.dp)
     )
-    ClickableText(
-        modifier = Modifier.fillMaxWidth(),
-        text = AnnotatedString("Login using user credentials"),
-        onClick = {
-            togglePinCodeLogin(isPinCodeLogin)
-        },
-        style = TextStyle(color = Color.White, textAlign = TextAlign.Center)
+    OutlinedButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+        onClick = { togglePinCodeLogin(isPinCodeLogin) },
+        border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
     )
+    {
+        Text(
+            text = "Login using user credentials",
+            style = TextStyle(
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        )
+    }
+//    ClickableText(
+//        modifier = Modifier.fillMaxWidth(),
+//        text = AnnotatedString("Login using user credentials"),
+//        onClick = {
+//            togglePinCodeLogin(isPinCodeLogin)
+//        },
+//        style = TextStyle(color = Color.White, textAlign = TextAlign.Center)
+//    )
 }
 
 @Composable
@@ -240,23 +255,30 @@ fun UserNamePasswordOption(
         visualTransformation = PasswordVisualTransformation(),
         shape = RoundedCornerShape(corner = CornerSize(50.dp))
     )
-//    IconButton(onClick = { togglePinCodeLogin(isPinCodeLogin) }) {
-//        Icon(
-//            painter = rememberVectorPainter(image = Icons.Default.Lock),
-//            contentDescription = ""
-//        )
-//    }
+
     Spacer(
         modifier = Modifier.height(10.dp)
     )
-    ClickableText(
-        modifier = Modifier.fillMaxWidth(),
-        text = AnnotatedString("Login using PIN code"),
-        onClick = {
-            togglePinCodeLogin(isPinCodeLogin)
-        },
-        style = TextStyle(color = Color.White, textAlign = TextAlign.Center)
+    Spacer(
+        modifier = Modifier.height(24.dp)
     )
+    OutlinedButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+        onClick = { togglePinCodeLogin(isPinCodeLogin) },
+        border = BorderStroke(2.dp, color = MaterialTheme.colors.primary)
+    )
+    {
+        Text(
+            text = "Login using PIN code",
+            style = TextStyle(
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        )
+    }
 }
 
 fun togglePinCodeLogin(pinCodeLogin: MutableState<Boolean>) {

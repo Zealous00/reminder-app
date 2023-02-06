@@ -42,7 +42,7 @@ fun HomeContent(
                 onClick = { /*TODO*/ },
 //                modifier = Modifier.padding(all = 10.dp),
                 contentColor = Color.Black,
-                backgroundColor = Color.Green
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
@@ -64,7 +64,7 @@ private fun HomeAppBar(backgroundColor: Color, navController: NavController) {
         title = {
             Text(
                 text = stringResource(R.string.app_name),
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .padding(start = 4.dp)
                     .height(24.dp)
@@ -84,7 +84,8 @@ private fun HomeAppBar(backgroundColor: Color, navController: NavController) {
                 Icon(
                     painter = rememberVectorPainter(image = Icons.Filled.ExitToApp),
                     contentDescription = stringResource(R.string.logout),
-                    modifier = Modifier.size(35.dp)
+                    modifier = Modifier.size(35.dp),
+                    tint = Color.Red
                 )
             }
         }
