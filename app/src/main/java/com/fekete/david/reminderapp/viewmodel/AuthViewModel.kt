@@ -12,10 +12,6 @@ class AuthViewModel : ViewModel() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    init {
-        createAccount("dfekete00@gmail.com","asdf")
-    }
-
     fun performLogin(username: String, password: String) {
         FirebaseAuthRepo.login(
             firebaseAuth = firebaseAuth,
@@ -35,13 +31,19 @@ class AuthViewModel : ViewModel() {
             firebaseAuth = firebaseAuth,
             username = username,
             password = password,
-            onSuccess = {},
-            onFailure = {})
+            onSuccess = {
+                _userLoginStatus.value = UserLoginStaus.Succesful
+            },
+            onFailure = {
+                _userLoginStatus.value = UserLoginStaus.Failure(it)
+            })
     }
 
 }
 
 sealed class UserLoginStaus {
     object Succesful : UserLoginStaus()
-    class Failure(val exception: Exception?) : UserLoginStaus()
+    class Failure(val exception: Exception?) : UserLoginStaus() {
+        val exceptionMessage = exception?.localizedMessage
+    }
 }

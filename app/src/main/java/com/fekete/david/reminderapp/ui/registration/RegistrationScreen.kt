@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
@@ -16,7 +15,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,14 +28,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
-import com.fekete.david.reminderapp.ui.profile.saveUser
+import com.fekete.david.reminderapp.ui.login.shortToast
+import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.UserLoginStaus
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
     modifier: Modifier,
     navController: NavHostController,
-    context: ProvidableCompositionLocal<Context>,
+    context: Context,
+    authViewModel: AuthViewModel,
     onBackPress: () -> Unit
 ) {
     val userName = remember { mutableStateOf("") }
@@ -50,6 +51,24 @@ fun RegistrationScreen(
     val localContext = LocalContext.current
     val scope = rememberCoroutineScope()
     val dataStore = StoreUserCredentials(context = localContext)
+
+    val registerStatus by authViewModel.userLoginStatus.collectAsState()
+
+    LaunchedEffect(key1 = registerStatus) {
+        when (registerStatus) {
+            is UserLoginStaus.Failure -> {
+                shortToast(
+                    context,
+                    "Unable to register! " + (registerStatus as UserLoginStaus.Failure).exceptionMessage
+                )
+            }
+            UserLoginStaus.Succesful -> {
+//                shortToast(context, "Login successful!")
+                navController.navigate("home")
+            }
+            null -> {}
+        }
+    }
 
     Surface() {
         Column(
@@ -165,36 +184,12 @@ fun RegistrationScreen(
                             !pincode.value.isEmpty()
                         ) {
                             if (password.value.equals(passwordAgain.value)) {
-                                scope.launch {
-                                    dataStore.saveUserCredentials(
-                                        User(
-                                            username = userName.value,
-                                            password = password.value,
-                                            phoneNumber = phoneNumber.value,
-                                            pincode = pincode.value,
-                                            imageUri = ""
-                                        )
-                                    )
-                                }
-                                Toast.makeText(
-                                    localContext,
-                                    "Registration successful!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navController.navigate("home")
+                                authViewModel.createAccount(userName.value, password.value)
                             } else {
-                                Toast.makeText(
-                                    localContext,
-                                    "The provided passwords do not match!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                shortToast(context, "The provided passwords do not match!")
                             }
                         } else {
-                            Toast.makeText(
-                                localContext,
-                                "Please fill out all the fields!",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            shortToast(context, "Please fill out all the fields!")
                         }
 
                     },

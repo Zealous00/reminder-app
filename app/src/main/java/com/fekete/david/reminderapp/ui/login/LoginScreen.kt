@@ -37,7 +37,7 @@ fun LoginScreen(
     modifier: Modifier,
     navController: NavController,
     context: Context,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
 
     val scope = rememberCoroutineScope()
