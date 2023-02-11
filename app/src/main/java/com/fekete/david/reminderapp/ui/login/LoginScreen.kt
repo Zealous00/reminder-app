@@ -26,14 +26,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.data.entitiy.User
+import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.UserLoginStaus
 
 @Composable
 fun LoginScreen(
     modifier: Modifier,
     navController: NavController,
-    context: Context
+    context: Context,
+    authViewModel: AuthViewModel = viewModel()
 ) {
 
     val scope = rememberCoroutineScope()
@@ -44,6 +48,21 @@ fun LoginScreen(
     val password = remember { mutableStateOf("") }
     val pincode = remember { mutableStateOf("") }
     val isPinCodeLogin = remember { mutableStateOf(false) }
+
+    val loginStatus by authViewModel.userLoginStatus.collectAsState()
+
+    LaunchedEffect(key1 = loginStatus) {
+        when (loginStatus) {
+            is UserLoginStaus.Failure -> {
+                shortToast(context, "Unable to login!")
+            }
+            UserLoginStaus.Succesful -> {
+//                shortToast(context, "Login successful!")
+                navController.navigate("home")
+            }
+            null -> {}
+        }
+    }
 
     val savedUser =
         dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
@@ -103,24 +122,29 @@ fun LoginScreen(
                     if (pincode.value.equals(savedUser.value?.pincode)) {
                         navController.navigate("home")
                     } else {
-                        Toast.makeText(
-                            context,
-                            "Pin code is not correct!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        shortToast(context, "Pin code is not correct!")
                     }
                 } else {
-                    if (userName.value.equals(savedUser.value?.username) &&
-                        password.value.equals(savedUser.value?.password)
-                    ) {
-                        navController.navigate("home")
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Username or password is not correct!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+//                    if (userName.value.equals(savedUser.value?.username) &&
+//                        password.value.equals(savedUser.value?.password)
+//                    ) {
+//                        navController.navigate("home")
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            "Username or password is not correct!",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+                    when {
+                        userName.value.isBlank() || password.value.isBlank() -> {
+                            shortToast(context, "Please fill out all the fields!")
+                        }
+                        else -> {
+                            authViewModel.performLogin(userName.value, password.value)
+                        }
                     }
+
                 }
             },
             modifier = Modifier
@@ -283,4 +307,13 @@ fun UserNamePasswordOption(
 
 fun togglePinCodeLogin(pinCodeLogin: MutableState<Boolean>) {
     pinCodeLogin.value = !pinCodeLogin.value
+}
+
+
+fun shortToast(context: Context, message: String) {
+    Toast.makeText(
+        context,
+        message,
+        Toast.LENGTH_SHORT
+    ).show()
 }

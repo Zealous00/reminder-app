@@ -12,6 +12,10 @@ class AuthViewModel : ViewModel() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
 
+    init {
+        createAccount("dfekete00@gmail.com","asdf")
+    }
+
     fun performLogin(username: String, password: String) {
         FirebaseAuthRepo.login(
             firebaseAuth = firebaseAuth,

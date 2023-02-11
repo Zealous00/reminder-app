@@ -36,7 +36,6 @@ object FirebaseAuthRepo {
                     onSuccess()
                 } else {
                     onFailure(it.exception)
-
                 }
             }
     }
