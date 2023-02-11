@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class AuthViewModel : ViewModel() {
-    private val _userLoginStatus = MutableStateFlow<UserLoginStaus?>(null)
+    private val _userLoginStatus = MutableStateFlow<UserLoginStatus?>(null)
     val userLoginStatus = _userLoginStatus.asStateFlow()
 
     private val firebaseAuth = FirebaseAuth.getInstance()
@@ -18,10 +18,10 @@ class AuthViewModel : ViewModel() {
             username = username,
             password = password,
             onSuccess = {
-                _userLoginStatus.value = UserLoginStaus.Succesful
+                _userLoginStatus.value = UserLoginStatus.Succesful
             },
             onFailure = {
-                _userLoginStatus.value = UserLoginStaus.Failure(it)
+                _userLoginStatus.value = UserLoginStatus.Failure(it)
             }
         )
     }
@@ -32,18 +32,22 @@ class AuthViewModel : ViewModel() {
             username = username,
             password = password,
             onSuccess = {
-                _userLoginStatus.value = UserLoginStaus.Succesful
+                _userLoginStatus.value = UserLoginStatus.Succesful
             },
             onFailure = {
-                _userLoginStatus.value = UserLoginStaus.Failure(it)
+                _userLoginStatus.value = UserLoginStatus.Failure(it)
             })
+    }
+
+    fun signOutFromAccount() {
+        FirebaseAuthRepo.signOut(firebaseAuth = firebaseAuth)
     }
 
 }
 
-sealed class UserLoginStaus {
-    object Succesful : UserLoginStaus()
-    class Failure(val exception: Exception?) : UserLoginStaus() {
+sealed class UserLoginStatus {
+    object Succesful : UserLoginStatus()
+    class Failure(val exception: Exception?) : UserLoginStatus() {
         val exceptionMessage = exception?.localizedMessage
     }
 }

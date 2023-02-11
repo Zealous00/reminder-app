@@ -21,22 +21,23 @@ import java.util.*
 
 @Composable
 fun Reminders() {
+    //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
     val reminderList: List<Reminder> = listOf(
-        Reminder(1, "Buy some meat", Date(1675698752138)),
-        Reminder(2, "Dont forget the laundry", Date(1575678752138)),
-        Reminder(3, "Take out the trash", Date(1675698752138)),
-        Reminder(4, "Dentist", Date(1675698752138)),
-        Reminder(5, "Take the dog for a walk", Date(1675698752138)),
-        Reminder(6, "Buy some meat", Date(1675698752138)),
-        Reminder(7, "Dont forget the laundry", Date(1575678752138)),
-        Reminder(8, "Take out the trash", Date(1675698752138)),
-        Reminder(9, "Dentist", Date(1675698752138)),
-        Reminder(10, "Take the dog for a walk", Date(1675698752138)),
-        Reminder(11, "Buy some meat", Date(1675698752138)),
-        Reminder(12, "Dont forget the laundry", Date(1575678752138)),
-        Reminder(13, "Take out the trash", Date(1675698752138)),
-        Reminder(14, "Dentist", Date(1675698752138)),
-        Reminder(15, "Take the dog for a walk", Date(1675698752138)),
+//        Reminder(1, "Buy some meat",Date(1575678752138)),
+//        Reminder(2, "Dont forget the laundry", Date(1575678752138)),
+//        Reminder(3, "Take out the trash", Date(1675698752138)),
+//        Reminder(4, "Dentist", Date(1675698752138)),
+//        Reminder(5, "Take the dog for a walk", Date(1675698752138)),
+//        Reminder(6, "Buy some meat", Date(1675698752138)),
+//        Reminder(7, "Dont forget the laundry", Date(1575678752138)),
+//        Reminder(8, "Take out the trash", Date(1675698752138)),
+//        Reminder(9, "Dentist", Date(1675698752138)),
+//        Reminder(10, "Take the dog for a walk", Date(1675698752138)),
+//        Reminder(11, "Buy some meat", Date(1675698752138)),
+//        Reminder(12, "Dont forget the laundry", Date(1575678752138)),
+//        Reminder(13, "Take out the trash", Date(1675698752138)),
+//        Reminder(14, "Dentist", Date(1675698752138)),
+//        Reminder(15, "Take the dog for a walk", Date(1675698752138)),
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -64,7 +65,9 @@ private fun ReminderListItem(
     reminder: Reminder,
     onClick: () -> Unit
 ) {
-    ConstraintLayout(modifier = Modifier.fillMaxWidth().clickable { onClick }) {
+    ConstraintLayout(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onClick }) {
         val (divider, text, date) = createRefs()
         Divider(
             Modifier.constrainAs(divider) {
@@ -74,7 +77,7 @@ private fun ReminderListItem(
             }
         )
         Text(
-            text = reminder.text,
+            text = reminder.message,
             maxLines = 1,
             style = MaterialTheme.typography.subtitle1,
             modifier = Modifier.constrainAs(text) {
@@ -89,7 +92,7 @@ private fun ReminderListItem(
             }
         )
         Text(
-            text = reminder.date.formatToString(),
+            text = reminder.reminder_time.formatToString(),
             maxLines = 1,
             style = MaterialTheme.typography.subtitle2,
             modifier = Modifier.constrainAs(date) {

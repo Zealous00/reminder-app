@@ -30,7 +30,7 @@ import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
-import com.fekete.david.reminderapp.viewmodel.UserLoginStaus
+import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,13 +56,13 @@ fun RegistrationScreen(
 
     LaunchedEffect(key1 = registerStatus) {
         when (registerStatus) {
-            is UserLoginStaus.Failure -> {
+            is UserLoginStatus.Failure -> {
                 shortToast(
                     context,
-                    "Unable to register! " + (registerStatus as UserLoginStaus.Failure).exceptionMessage
+                    "Unable to register! " + (registerStatus as UserLoginStatus.Failure).exceptionMessage
                 )
             }
-            UserLoginStaus.Succesful -> {
+            UserLoginStatus.Succesful -> {
 //                shortToast(context, "Login successful!")
                 navController.navigate("home")
             }

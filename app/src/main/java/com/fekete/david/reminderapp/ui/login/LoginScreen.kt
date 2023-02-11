@@ -1,6 +1,7 @@
 package com.fekete.david.reminderapp.ui.login
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -29,8 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.data.entitiy.User
+import com.fekete.david.reminderapp.repo.FirebaseAuthRepo
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
-import com.fekete.david.reminderapp.viewmodel.UserLoginStaus
+import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
@@ -53,10 +56,10 @@ fun LoginScreen(
 
     LaunchedEffect(key1 = loginStatus) {
         when (loginStatus) {
-            is UserLoginStaus.Failure -> {
+            is UserLoginStatus.Failure -> {
                 shortToast(context, "Unable to login!")
             }
-            UserLoginStaus.Succesful -> {
+            UserLoginStatus.Succesful -> {
 //                shortToast(context, "Login successful!")
                 navController.navigate("home")
             }
@@ -138,7 +141,9 @@ fun LoginScreen(
 //                    }
                     when {
                         userName.value.isBlank() || password.value.isBlank() -> {
-                            shortToast(context, "Please fill out all the fields!")
+                            /*TODO: CHANGE*/
+                            navController.navigate("home")
+//                            shortToast(context, "Please fill out all the fields!")
                         }
                         else -> {
                             authViewModel.performLogin(userName.value, password.value)
@@ -227,14 +232,6 @@ fun PinCodeLoginOption(
             )
         )
     }
-//    ClickableText(
-//        modifier = Modifier.fillMaxWidth(),
-//        text = AnnotatedString("Login using user credentials"),
-//        onClick = {
-//            togglePinCodeLogin(isPinCodeLogin)
-//        },
-//        style = TextStyle(color = Color.White, textAlign = TextAlign.Center)
-//    )
 }
 
 @Composable

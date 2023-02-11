@@ -11,8 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -31,6 +29,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,6 +40,7 @@ fun ProfileScreen(
     onBackPress: () -> Unit
 
 ) {
+    val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
     val dataStore = StoreUserCredentials(context = context)
     val savedUser =
@@ -80,7 +81,8 @@ fun ProfileScreen(
 //                        .background(color = Color.Red)
                         .weight(0.6f),
                     user = savedUser,
-                    navController = navController
+                    navController = navController,
+                    currentUser = currentUser
                 )
             }
         }
@@ -168,7 +170,12 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
 }
 
 @Composable
-fun DataPart(modifier: Modifier, user: State<User?>, navController: NavController) {
+fun DataPart(
+    modifier: Modifier,
+    user: State<User?>,
+    navController: NavController,
+    currentUser: FirebaseUser?
+) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -226,7 +233,8 @@ fun DataPart(modifier: Modifier, user: State<User?>, navController: NavControlle
                 ) {
                     Text(
 //                color = Color.Black,
-                        text = user.value?.username + "",
+//                        text = user.value?.username + "",
+                        text = currentUser?.email + "",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
