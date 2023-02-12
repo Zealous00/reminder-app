@@ -1,5 +1,7 @@
 package com.fekete.david.reminderapp.ui.home
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.fekete.david.reminderapp.MainActivity
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
@@ -80,6 +84,7 @@ private fun HomeAppBar(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
+    val activity = (LocalContext.current as? Activity)
     TopAppBar(
         title = {
             Text(
@@ -100,7 +105,10 @@ private fun HomeAppBar(
                 )
             }
 
-            IconButton(onClick = { authViewModel.signOutFromAccount() }) {
+            IconButton(onClick = {
+                authViewModel.signOutFromAccount()
+                authViewModel.restartApp(activity)
+            }) {
                 Icon(
                     painter = rememberVectorPainter(image = Icons.Filled.ExitToApp),
                     contentDescription = stringResource(R.string.logout),
@@ -110,5 +118,4 @@ private fun HomeAppBar(
             }
         }
     )
-
 }

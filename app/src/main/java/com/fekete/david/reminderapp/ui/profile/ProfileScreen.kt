@@ -1,5 +1,6 @@
 package com.fekete.david.reminderapp.ui.profile
 
+import android.app.Activity
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
+import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
@@ -37,6 +39,7 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     modifier: Modifier,
     navController: NavController,
+    authViewModel: AuthViewModel,
     onBackPress: () -> Unit
 
 ) {
@@ -82,6 +85,7 @@ fun ProfileScreen(
                         .weight(0.6f),
                     user = savedUser,
                     navController = navController,
+                    authViewModel = authViewModel,
                     currentUser = currentUser
                 )
             }
@@ -174,8 +178,10 @@ fun DataPart(
     modifier: Modifier,
     user: State<User?>,
     navController: NavController,
+    authViewModel: AuthViewModel,
     currentUser: FirebaseUser?
 ) {
+    val activity = (LocalContext.current as? Activity)
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -273,7 +279,10 @@ fun DataPart(
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Button(
-                    onClick = { navController.navigate("login") },
+                    onClick = {
+                        authViewModel.signOutFromAccount()
+                        authViewModel.restartApp(activity)
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(50.dp),

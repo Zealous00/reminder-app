@@ -55,7 +55,9 @@ fun ReminderApp(
             ProfileScreen(
                 modifier = modifier,
                 navController = appState.navController,
-                onBackPress = { appState.navigateBack() })
+                onBackPress = { appState.navigateBack() },
+                authViewModel = authViewModel
+            )
         }
         composable(route = "registration") {
             RegistrationScreen(

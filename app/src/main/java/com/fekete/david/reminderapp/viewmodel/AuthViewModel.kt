@@ -1,6 +1,10 @@
 package com.fekete.david.reminderapp.viewmodel
 
+import android.app.Activity
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
+import com.fekete.david.reminderapp.MainActivity
 import com.fekete.david.reminderapp.repository.FirebaseAuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +49,16 @@ class AuthViewModel : ViewModel() {
 
     fun signOutFromAccount() {
         FirebaseAuthRepository.signOut(firebaseAuth = firebaseAuth)
+//        val intent = Intent(this, MainActivity::class.java)
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//        startActivity(intent)
+//        finish()
+    }
+
+    fun restartApp(activity: Activity?) {
+        val i = Intent(activity, MainActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        activity?.startActivity(i)
     }
 
 }
