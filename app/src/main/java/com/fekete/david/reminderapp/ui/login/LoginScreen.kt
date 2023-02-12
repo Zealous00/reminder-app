@@ -35,11 +35,8 @@ fun LoginScreen(
     authViewModel: AuthViewModel
 ) {
 
-    val scope = rememberCoroutineScope()
 
-    val dataStore = StoreUserCredentials(context = context)
-
-    val userName = remember { mutableStateOf("") }
+    val userEmail = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val pincode = remember { mutableStateOf("") }
     val isPinCodeLogin = remember { mutableStateOf(false) }
@@ -59,21 +56,11 @@ fun LoginScreen(
         }
     }
 
-//    val savedUser =
-//        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
-
     Column(
         modifier = modifier.padding(20.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-//        Image(
-//            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//            contentDescription = "login_image",
-//            modifier = Modifier.fillMaxWidth(),
-//            alignment = Alignment.Center
-//        )
-
         Icon(
             painter = rememberVectorPainter(image = Icons.Filled.Notifications),
             contentDescription = "login_image",
@@ -90,8 +77,8 @@ fun LoginScreen(
                 isPinCodeLogin = isPinCodeLogin
             )
         } else {
-            UserNamePasswordOption(
-                userName = userName,
+            EmailPasswordOption(
+                userEmail = userEmail,
                 password = password,
                 isPinCodeLogin = isPinCodeLogin
             )
@@ -103,16 +90,6 @@ fun LoginScreen(
         )
         Button(
             onClick = {
-//                scope.launch {
-//                    dataStore.saveUserCredentials(
-//                        User(
-//                            username = userName.value,
-//                            password = password.value,
-//                            phoneNumber = "+420911234567",
-//                            pincode = "5555"
-//                        )
-//                    )
-//                }
                 if (isPinCodeLogin.value) {
 //                    if (pincode.value.equals(savedUser.value?.pincode)) {
 //                        navController.navigate("home")
@@ -120,25 +97,12 @@ fun LoginScreen(
 //                        shortToast(context, "Pin code is not correct!")
 //                    }
                 } else {
-//                    if (userName.value.equals(savedUser.value?.username) &&
-//                        password.value.equals(savedUser.value?.password)
-//                    ) {
-//                        navController.navigate("home")
-//                    } else {
-//                        Toast.makeText(
-//                            context,
-//                            "Username or password is not correct!",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
                     when {
-                        userName.value.isBlank() || password.value.isBlank() -> {
-                            /*TODO: CHANGE*/
-                            navController.navigate("home")
-//                            shortToast(context, "Please fill out all the fields!")
+                        userEmail.value.isBlank() || password.value.isBlank() -> {
+                            shortToast(context, "Please fill out all the fields!")
                         }
                         else -> {
-                            authViewModel.performLogin(userName.value, password.value)
+                            authViewModel.performLogin(userEmail.value, password.value)
                         }
                     }
 
@@ -151,7 +115,6 @@ fun LoginScreen(
         ) {
             Text(text = "Login")
         }
-//        Text(text = savedUser.value?.username + " " + savedUser.value?.password + " " + savedUser.value?.pincode)
         Spacer(
             modifier = Modifier.height(16.dp)
         )
@@ -245,16 +208,16 @@ fun PinCodeChar(index: Int, text: String) {
 }
 
 @Composable
-fun UserNamePasswordOption(
-    userName: MutableState<String>,
+fun EmailPasswordOption(
+    userEmail: MutableState<String>,
     password: MutableState<String>,
     isPinCodeLogin: MutableState<Boolean>
 ) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = userName.value,
-        onValueChange = { text -> userName.value = text },
-        label = { Text(text = "Username") },
+        value = userEmail.value,
+        onValueChange = { text -> userEmail.value = text },
+        label = { Text(text = "Email") },
         shape = RoundedCornerShape(corner = CornerSize(50.dp))
     )
     Spacer(

@@ -24,7 +24,7 @@ class StoreUserCredentials(private val context: Context) {
 
     suspend fun saveUserCredentials(user: User) {
         context.dataStore.edit { preferences ->
-            preferences[USERNAME_KEY] = user.username
+            preferences[USERNAME_KEY] = user.email
             preferences[PASSWORD_KEY] = user.password
             preferences[PHONE_NUMBER_KEY] = user.phoneNumber
             preferences[PIN_CODE_KEY] = user.pinCode
@@ -79,7 +79,7 @@ class StoreUserCredentials(private val context: Context) {
 
     val getUserFromDataStore: Flow<User?> = context.dataStore.data.map { preferences ->
         User(
-            username = preferences[USERNAME_KEY] ?: "",
+            email = preferences[USERNAME_KEY] ?: "",
             password = preferences[PASSWORD_KEY] ?: "",
             phoneNumber = preferences[PHONE_NUMBER_KEY] ?: "",
             pinCode = preferences[PIN_CODE_KEY] ?: "",
