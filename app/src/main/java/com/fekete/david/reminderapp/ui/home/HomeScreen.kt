@@ -15,17 +15,24 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier,
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    reminderViewModel: ReminderViewModel
 ) {
+//    DisposableEffect(viewModel) {
+//        viewModel.addListener()
+//        onDispose { viewModel.removeListener() }
+//    }
     Surface() {
         HomeContent(
-            navController = navController, authViewModel = authViewModel
+            navController = navController,
+            authViewModel = authViewModel,
+            reminderViewModel = reminderViewModel
         )
     }
 }
@@ -34,7 +41,8 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    reminderViewModel: ReminderViewModel
 ) {
     Scaffold(
         modifier = Modifier.padding(20.dp),
@@ -56,9 +64,12 @@ fun HomeContent(
             HomeAppBar(
                 backgroundColor = appBarColor,
                 navController = navController,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
             )
-            Reminders()
+            Reminders(
+                authViewModel = authViewModel,
+                reminderViewModel = reminderViewModel
+            )
         }
     }
 }

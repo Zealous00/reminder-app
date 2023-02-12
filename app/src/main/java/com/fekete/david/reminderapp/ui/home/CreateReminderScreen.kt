@@ -10,9 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.fekete.david.reminderapp.data.entitiy.Reminder
+import com.fekete.david.reminderapp.repository.StorageRepository
+import com.fekete.david.reminderapp.ui.login.shortToast
+import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
+import com.google.firebase.auth.FirebaseAuth
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 @Composable
@@ -33,13 +39,21 @@ fun CreateReminderScreen(
         Column(
         ) {
             ReminderTopBar(onBackPress = onBackPress)
-            ReminderCreationPart(context = context, navController = navController)
+            ReminderCreationPart(
+                context = context,
+                navController = navController,
+                onBackPress = onBackPress
+            )
         }
     }
 }
 
 @Composable
-fun ReminderCreationPart(context: Context, navController: NavHostController) {
+fun ReminderCreationPart(
+    context: Context,
+    navController: NavHostController,
+    onBackPress: () -> Unit
+) {
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
@@ -47,23 +61,52 @@ fun ReminderCreationPart(context: Context, navController: NavHostController) {
     val hour = calendar[Calendar.HOUR_OF_DAY]
     val minute = calendar[Calendar.MINUTE]
 
+    val reminderViewModel = ReminderViewModel(StorageRepository())
+
     calendar.time = Date()
 
     val reminderMessage = remember { mutableStateOf("") }
     val reminderDate = remember { mutableStateOf("") }
+//    val reminderDate by remember { mutableStateOf(LocalDate.now()) }
+//    val formattedReminderDate by remember {
+//        derivedStateOf { DateTimeFormatter.ofPattern("MMMM dd yyyy").format(reminderDate) }
+//    }
     val reminderTime = remember { mutableStateOf("") }
+//    val reminderTime = remember { mutableStateOf(LocalTime.NOON) }
+//    val formattedReminderTime by remember {
+//        derivedStateOf { DateTimeFormatter.ofPattern("hh:mm").format(reminderTime) }
+//    }
+    val locationX = remember { mutableStateOf("") }
+    val locationY = remember { mutableStateOf("") }
+    val creationTime = remember { mutableStateOf("") }
 
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            reminderDate.value = "$dayOfMonth/${month + 1}/$year"
+            var monthString = (month + 1).toString()
+            if (month < 11) {
+                monthString = "0${month + 1}"
+            }
+            var dayString = dayOfMonth.toString()
+            if (dayOfMonth < 10) {
+                dayString = "0$dayOfMonth"
+            }
+            reminderDate.value = "$year-$monthString-$dayString"
         }, year, month, day
     )
 
     val timePickerDialog = TimePickerDialog(
         context,
-        { _, mHour: Int, mMinute: Int ->
-            reminderTime.value = "$mHour:$mMinute"
+        { _, hour: Int, minute: Int ->
+            var minuteString = minute.toString()
+            if (minute < 10) {
+                minuteString = "0$minute"
+            }
+            var hourString = hour.toString()
+            if (hour < 10) {
+                hourString = "0$hour"
+            }
+            reminderTime.value = "$hourString:$minuteString:00"
         }, hour, minute, false
     )
 
@@ -122,6 +165,32 @@ fun ReminderCreationPart(context: Context, navController: NavHostController) {
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    println(LocalDateTime.now())
+                    val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
+                    reminderViewModel.addReminder(
+                        Reminder(
+                            message = reminderMessage.value,
+                            locationX = "locationX",
+                            locationY = "locationY",
+                            reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
+                            creationTime = Timestamp(Date().time),
+                            userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
+                            reminderSeen = false
+                        )
+                    )
+                    shortToast(context, "Reminder added successfully!")
+                    navController.navigate("home")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(corner = CornerSize(50.dp))
+            ) {
+                Text(text = "Create reminder")
+            }
         }
 
     }

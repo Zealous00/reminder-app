@@ -1,47 +1,54 @@
 package com.fekete.david.reminderapp.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.fekete.david.reminderapp.data.entitiy.Reminder
+import com.fekete.david.reminderapp.repository.StorageRepository
+import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 @Composable
-fun Reminders() {
-    //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
-    val reminderList: List<Reminder> = listOf(
-//        Reminder(1, "Buy some meat",Date(1575678752138)),
-//        Reminder(2, "Dont forget the laundry", Date(1575678752138)),
-//        Reminder(3, "Take out the trash", Date(1675698752138)),
-//        Reminder(4, "Dentist", Date(1675698752138)),
-//        Reminder(5, "Take the dog for a walk", Date(1675698752138)),
-//        Reminder(6, "Buy some meat", Date(1675698752138)),
-//        Reminder(7, "Dont forget the laundry", Date(1575678752138)),
-//        Reminder(8, "Take out the trash", Date(1675698752138)),
-//        Reminder(9, "Dentist", Date(1675698752138)),
-//        Reminder(10, "Take the dog for a walk", Date(1675698752138)),
-//        Reminder(11, "Buy some meat", Date(1675698752138)),
-//        Reminder(12, "Dont forget the laundry", Date(1575678752138)),
-//        Reminder(13, "Take out the trash", Date(1675698752138)),
-//        Reminder(14, "Dentist", Date(1675698752138)),
-//        Reminder(15, "Take the dog for a walk", Date(1675698752138)),
-    )
+fun Reminders(authViewModel: AuthViewModel, reminderViewModel: ReminderViewModel) {
+
+//    val reminderViewModel = ReminderViewModel(StorageRepository())
+    reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid)
+    val reminderList by reminderViewModel.reminders.collectAsState()
+
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        RemindersList(list = reminderList)
+        if (reminderList == null) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "No reminders to display! Create one!")
+            }
+        } else {
+            RemindersList(list = reminderList!!)
+        }
+
     }
 }
 
@@ -92,7 +99,7 @@ private fun ReminderListItem(
             }
         )
         Text(
-            text = reminder.reminder_time.formatToString(),
+            text = reminder.reminderTime.formatToString(),
             maxLines = 1,
             style = MaterialTheme.typography.subtitle2,
             modifier = Modifier.constrainAs(date) {

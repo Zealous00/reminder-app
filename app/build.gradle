@@ -28,6 +28,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -58,6 +59,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-runtime-ktx:2.4.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha03'
+    implementation 'com.google.android.material:material:1.7.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -76,4 +78,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation('org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.3')
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.6'
 }

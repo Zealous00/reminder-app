@@ -6,19 +6,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.home.CreateReminderScreen
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
 import com.fekete.david.reminderapp.ui.registration.RegistrationScreen
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ReminderApp(
     appState: ReminderAppState = rememberReminderAppState(),
     modifier: Modifier,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = AuthViewModel(),
+    reminderViewModel: ReminderViewModel = ReminderViewModel(StorageRepository())
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
     var startlocation = ""
@@ -45,7 +48,8 @@ fun ReminderApp(
             HomeScreen(
                 modifier = modifier,
                 navController = appState.navController,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                reminderViewModel = reminderViewModel
             )
         }
         composable(route = "profile") {

@@ -1,7 +1,6 @@
 package com.fekete.david.reminderapp.ui.login
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -10,30 +9,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.fekete.david.reminderapp.data.entitiy.User
-import com.fekete.david.reminderapp.repo.FirebaseAuthRepo
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
@@ -67,8 +60,8 @@ fun LoginScreen(
         }
     }
 
-    val savedUser =
-        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
+//    val savedUser =
+//        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
 
     Column(
         modifier = modifier.padding(20.dp),
@@ -122,11 +115,11 @@ fun LoginScreen(
 //                    )
 //                }
                 if (isPinCodeLogin.value) {
-                    if (pincode.value.equals(savedUser.value?.pincode)) {
-                        navController.navigate("home")
-                    } else {
-                        shortToast(context, "Pin code is not correct!")
-                    }
+//                    if (pincode.value.equals(savedUser.value?.pincode)) {
+//                        navController.navigate("home")
+//                    } else {
+//                        shortToast(context, "Pin code is not correct!")
+//                    }
                 } else {
 //                    if (userName.value.equals(savedUser.value?.username) &&
 //                        password.value.equals(savedUser.value?.password)

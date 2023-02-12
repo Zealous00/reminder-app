@@ -29,7 +29,7 @@ class StoreUserCredentials(private val context: Context) {
             preferences[USERNAME_KEY] = user.username
             preferences[PASSWORD_KEY] = user.password
             preferences[PHONE_NUMBER_KEY] = user.phoneNumber
-            preferences[PIN_CODE_KEY] = user.pincode
+            preferences[PIN_CODE_KEY] = user.pinCode
             preferences[IMAGE_URI_KEY] = user.imageUri
         }
     }
@@ -84,7 +84,7 @@ class StoreUserCredentials(private val context: Context) {
             username = preferences[USERNAME_KEY] ?: "",
             password = preferences[PASSWORD_KEY] ?: "",
             phoneNumber = preferences[PHONE_NUMBER_KEY] ?: "",
-            pincode = preferences[PIN_CODE_KEY] ?: "",
+            pinCode = preferences[PIN_CODE_KEY] ?: "",
             imageUri = preferences[IMAGE_URI_KEY] ?: ""
         )
     }
