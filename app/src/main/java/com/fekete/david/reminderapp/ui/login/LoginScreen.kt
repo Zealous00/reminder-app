@@ -217,7 +217,7 @@ fun EmailPasswordOption(
         modifier = Modifier.fillMaxWidth(),
         value = userEmail.value,
         onValueChange = { text -> userEmail.value = text },
-        label = { Text(text = "Email") },
+        label = { Text(text = "Email address") },
         shape = RoundedCornerShape(corner = CornerSize(50.dp))
     )
     Spacer(

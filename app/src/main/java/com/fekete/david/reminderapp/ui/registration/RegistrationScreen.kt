@@ -38,7 +38,7 @@ fun RegistrationScreen(
     authViewModel: AuthViewModel,
     onBackPress: () -> Unit
 ) {
-    val userName = remember { mutableStateOf("") }
+    val userEmail = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val passwordAgain = remember { mutableStateOf("") }
     val phoneNumber = remember { mutableStateOf("") }
@@ -101,9 +101,9 @@ fun RegistrationScreen(
                 )
                 OutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    value = userName.value,
-                    onValueChange = { text -> userName.value = text },
-                    label = { Text(text = "Username") },
+                    value = userEmail.value,
+                    onValueChange = { text -> userEmail.value = text },
+                    label = { Text(text = "Email address") },
                     shape = RoundedCornerShape(corner = CornerSize(50.dp))
                 )
                 Spacer(
@@ -174,14 +174,14 @@ fun RegistrationScreen(
                 )
                 Button(
                     onClick = {
-                        if (!userName.value.isEmpty() &&
+                        if (!userEmail.value.isEmpty() &&
                             !password.value.isEmpty() &&
                             !passwordAgain.value.isEmpty() &&
                             !phoneNumber.value.isEmpty() &&
                             !pincode.value.isEmpty()
                         ) {
                             if (password.value.equals(passwordAgain.value)) {
-                                authViewModel.createAccount(userName.value, password.value)
+                                authViewModel.createAccount(userEmail.value, password.value)
                             } else {
                                 shortToast(context, "The provided passwords do not match!")
                             }
