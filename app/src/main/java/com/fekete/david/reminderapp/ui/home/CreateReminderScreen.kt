@@ -168,21 +168,27 @@ fun ReminderCreationPart(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
-                    println(LocalDateTime.now())
                     val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
-                    reminderViewModel.addReminder(
-                        Reminder(
-                            message = reminderMessage.value,
-                            locationX = "locationX",
-                            locationY = "locationY",
-                            reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
-                            creationTime = Timestamp(Date().time),
-                            userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-                            reminderSeen = false
+                    if (reminderMessage.value.isEmpty()) {
+                        shortToast(context, "Please fill out the message!")
+                    } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
+                        shortToast(context, "Please choose date and time!")
+                    } else {
+                        reminderViewModel.addReminder(
+                            Reminder(
+                                message = reminderMessage.value,
+                                locationX = "locationX",
+                                locationY = "locationY",
+                                reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
+                                creationTime = Timestamp(Date().time),
+                                userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
+                                reminderSeen = false
+                            )
                         )
-                    )
-                    shortToast(context, "Reminder added successfully!")
-                    navController.navigate("home")
+                        shortToast(context, "Reminder added successfully!")
+                        navController.navigate("home")
+                    }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
