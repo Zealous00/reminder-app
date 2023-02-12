@@ -24,7 +24,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
 

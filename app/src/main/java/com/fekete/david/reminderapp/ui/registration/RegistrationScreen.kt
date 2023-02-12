@@ -1,7 +1,6 @@
 package com.fekete.david.reminderapp.ui.registration
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -26,12 +25,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
-import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(

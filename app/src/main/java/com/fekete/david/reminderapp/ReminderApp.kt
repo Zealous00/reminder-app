@@ -3,7 +3,6 @@ package com.fekete.david.reminderapp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fekete.david.reminderapp.repository.StorageRepository

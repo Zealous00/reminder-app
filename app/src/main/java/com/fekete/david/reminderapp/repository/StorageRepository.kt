@@ -2,13 +2,8 @@ package com.fekete.david.reminderapp.repository
 
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import java.time.LocalDate
 
 const val REMINDERS_COLLECTION_REF = "reminders"

@@ -1,9 +1,6 @@
 package com.fekete.david.reminderapp.data.entitiy
 
 
-import java.sql.Timestamp
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
