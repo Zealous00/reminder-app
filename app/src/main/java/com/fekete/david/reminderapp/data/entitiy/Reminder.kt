@@ -6,6 +6,7 @@ import java.util.*
 //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
 
 data class Reminder(
+    var id: String = "",
     val message: String = "",
     val locationX: String = "",
     val locationY: String = "",

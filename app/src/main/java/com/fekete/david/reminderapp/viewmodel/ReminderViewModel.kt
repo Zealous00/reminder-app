@@ -43,7 +43,6 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
                 userId!!,
                 onSuccess = { reminders ->
                     _reminders.value = reminders
-                    println(_reminders.value)
                 },
                 onError = { error -> println(error) })
         }

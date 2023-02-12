@@ -25,13 +25,12 @@ import java.util.*
 @Composable
 fun Reminders(authViewModel: AuthViewModel, reminderViewModel: ReminderViewModel) {
 
-//    val reminderViewModel = ReminderViewModel(StorageRepository())
     reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid)
     val reminderList by reminderViewModel.reminders.collectAsState()
 
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        if (reminderList == null) {
+        if (reminderList == null || reminderList!!.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -55,7 +54,7 @@ fun RemindersList(list: List<Reminder>) {
         items(list) { item ->
             ReminderListItem(
                 reminder = item,
-                onClick = {}
+                onClick = {item}
             )
         }
     }

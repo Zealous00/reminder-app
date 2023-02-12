@@ -3,6 +3,7 @@ package com.fekete.david.reminderapp.repository
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
 
@@ -23,10 +24,19 @@ class StorageRepository() {
         onError: (Throwable?) -> Unit,
 
         ) {
+        var reminderList = ArrayList<Reminder>()
+//        reminderList
         remindersRef.orderBy("reminderTime").whereEqualTo("userId", userId).get()
-            .addOnSuccessListener {
-                if (it != null) {
-                    onSuccess.invoke(it.toObjects(Reminder::class.java))
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null) {
+                    for (reminder in snapshot.documents) {
+                        val r = reminder.toObject(Reminder::class.java)
+                        println(r)
+                        r?.id = reminder.id
+                        reminderList.add(r!!)
+                        println(r)
+                    }
+                    onSuccess.invoke(reminderList)
                 } else {
                     onError.invoke(Throwable("No reminders in database!"))
                 }
