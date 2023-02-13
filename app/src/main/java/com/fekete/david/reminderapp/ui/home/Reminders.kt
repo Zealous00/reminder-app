@@ -46,10 +46,6 @@ fun Reminders(
     val reminderList by reminderViewModel.reminders.collectAsState()
 
 
-
-
-
-
     Column(modifier = Modifier.fillMaxWidth()) {
         if (reminderList == null || reminderList!!.isEmpty()) {
             Column(
@@ -60,6 +56,7 @@ fun Reminders(
                 Text(text = "No reminders to display! Create one!")
             }
         } else {
+            Thread.sleep(300L)
             RemindersList(list = reminderList!!, navController = navController)
         }
 
