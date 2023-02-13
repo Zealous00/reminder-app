@@ -65,7 +65,8 @@ fun ReminderApp(
                 modifier = modifier,
                 navController = appState.navController,
                 onBackPress = { appState.navigateBack() },
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                profileViewModel = profileViewModel
             )
         }
         composable(route = "registration") {

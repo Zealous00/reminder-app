@@ -11,6 +11,9 @@ class ProfileViewModel(private val repository: StorageRepository) : ViewModel() 
     private val _userProfileStatus = MutableStateFlow<ReminderStatus?>(null)
     val userProfileStatus = _userProfileStatus.asStateFlow()
 
+    private val _profile = MutableStateFlow<User?>(null)
+    val profile = _profile.asStateFlow()
+
     private val hasUser: Boolean
         get() = repository.hasUser()
 
@@ -25,6 +28,17 @@ class ProfileViewModel(private val repository: StorageRepository) : ViewModel() 
 
                 }
             }
+        }
+    }
+
+    fun getUserProfile(userId: String?) {
+        if (hasUser) {
+            repository.getUserProfile(
+                userId!!,
+                onSuccess = { profile ->
+                    _profile.value = profile
+                },
+                onError = { error -> println(error) })
         }
     }
 

@@ -61,8 +61,17 @@ class StorageRepository() {
         reminder: Reminder,
         onComplete: (Boolean) -> Unit
     ) {
+        val addData = hashMapOf<String, Any>(
+            "message" to reminder.message,
+            "locationX" to reminder.locationX,
+            "locationY" to reminder.locationY,
+            "reminderTime" to reminder.reminderTime,
+            "creationTime" to reminder.creationTime,
+            "userId" to reminder.userId,
+            "reminderSeen" to reminder.reminderSeen
+        )
         val documentId = remindersRef.document().id
-        remindersRef.document(documentId).set(reminder)
+        remindersRef.document(documentId).set(addData)
             .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
     }
 
@@ -95,8 +104,38 @@ class StorageRepository() {
         onComplete: (Boolean) -> Unit
     ) {
         val documentId = profilesRef.document().id
-        profilesRef.document(documentId).set(user)
+
+        val addData = hashMapOf<String, Any>(
+            "id" to user.id,
+            "email" to user.email,
+            "phoneNumber" to user.phoneNumber,
+            "pinCode" to user.pinCode,
+            "imageUri" to user.imageUri
+        )
+
+        profilesRef.document(documentId).set(addData)
             .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
+    }
+
+    fun getUserProfile(
+        userId: String,
+        onSuccess: (User?) -> Unit,
+        onError: (Throwable?) -> Unit,
+
+        ) {
+        profilesRef.whereEqualTo("id", userId).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null && snapshot.documents.size > 0) {
+                    val snap = snapshot.documents[0]
+                    val prof = snap.toObject(User::class.java)
+                    prof?.profileId = snap.id
+                    onSuccess.invoke(prof)
+                } else {
+                    onError.invoke(Throwable("No Profile in database!"))
+                }
+            }.addOnFailureListener { result ->
+                onError.invoke(result.cause)
+            }
     }
 }
 

@@ -1,9 +1,6 @@
 package com.fekete.david.reminderapp.ui.profile
 
 import android.app.Activity
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -31,32 +28,39 @@ import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier,
     navController: NavController,
     authViewModel: AuthViewModel,
+    profileViewModel: ProfileViewModel,
     onBackPress: () -> Unit
 
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
     val dataStore = StoreUserCredentials(context = context)
-    val savedUser = User()
+
+    profileViewModel.getUserProfile(FirebaseAuth.getInstance().currentUser?.uid)
+
+    val currentUserProfile by profileViewModel.profile.collectAsState()
+
+//    val savedUser = User()
 //        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
     Surface() {
         Column {
             TopAppBar() {
                 IconButton(
-                    onClick = saveUser(
-//                        user = savedUser,
-                        dataStore = dataStore,
-                        onBackPress = onBackPress
-                    )
+                    onClick = {}
+//                    saveUser(
+//                        userProfile = currentUserProfile,
+//                        dataStore = dataStore,
+//                        onBackPress = onBackPress
+//                    )
                 ) {
                     Icon(
                         painter = rememberVectorPainter(image = Icons.Default.ArrowBack),
@@ -74,8 +78,7 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .background(color = MaterialTheme.colors.primary)
                         .weight(0.4f),
-//                    user = savedUser,
-                    dataStore = dataStore
+                    userProfile = currentUserProfile
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DataPart(
@@ -86,27 +89,26 @@ fun ProfileScreen(
 //                    user = savedUser,
                     navController = navController,
                     authViewModel = authViewModel,
-                    currentUser = currentUser
+                    userProfile = currentUserProfile
                 )
             }
         }
     }
 }
 
-fun saveUser(
-//    user: State<User?>,
-    dataStore: StoreUserCredentials,
-    onBackPress: () -> Unit
-): () -> Unit {
-    return onBackPress
-}
+//fun saveUser(
+//    dataStore: StoreUserCredentials,
+//    onBackPress: () -> Unit,
+//    userProfile: User?
+//): () -> Unit {
+//    return onBackPress
+//}
 
 
 @Composable
 fun ImagePart(
     modifier: Modifier,
-//    user: State<User?>,
-    dataStore: StoreUserCredentials
+    userProfile: User?
 ) {
 //    var imageUri = remember { dataStore.getImageUri ?: "" }
     var imageUri = rememberSaveable { mutableStateOf("") }
@@ -180,10 +182,9 @@ fun ImagePart(
 @Composable
 fun DataPart(
     modifier: Modifier,
-//    user: State<User?>,
+    userProfile: User?,
     navController: NavController,
     authViewModel: AuthViewModel,
-    currentUser: FirebaseUser?
 ) {
     val activity = (LocalContext.current as? Activity)
     Column(
@@ -231,7 +232,7 @@ fun DataPart(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Nickname",
+                    text = "Email address",
                     fontSize = 14.sp,
                     modifier = Modifier.padding(4.dp)
                 )
@@ -243,8 +244,7 @@ fun DataPart(
                 ) {
                     Text(
 //                color = Color.Black,
-//                        text = user.value?.username + "",
-                        text = currentUser?.email + "",
+                        text = userProfile?.email.orEmpty(),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -266,7 +266,7 @@ fun DataPart(
                 ) {
                     Text(
 //                color = Color.Black,
-                        text =  "",
+                        text = userProfile?.phoneNumber.orEmpty(),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
