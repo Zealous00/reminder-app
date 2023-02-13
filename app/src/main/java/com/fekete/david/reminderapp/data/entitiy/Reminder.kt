@@ -14,4 +14,4 @@ data class Reminder(
     val creationTime: Date = Date(),
     val userId: String = "",
     val reminderSeen: Boolean = false
-)
+) : java.io.Serializable

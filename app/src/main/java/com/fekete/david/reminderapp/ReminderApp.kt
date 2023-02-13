@@ -3,10 +3,15 @@ package com.fekete.david.reminderapp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.home.CreateReminderScreen
+import com.fekete.david.reminderapp.ui.home.EditReminderScreen
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
@@ -14,6 +19,7 @@ import com.fekete.david.reminderapp.ui.registration.RegistrationScreen
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 
 @Composable
 fun ReminderApp(
@@ -73,6 +79,20 @@ fun ReminderApp(
                 navController = appState.navController,
                 context = LocalContext.current,
                 onBackPress = { appState.navigateBack() }
+            )
+        }
+        composable(
+            route = "editreminder/{serializedReminder}", arguments = listOf(
+                navArgument("serializedReminder") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                })
+        ) {
+            EditReminderScreen(
+                context = LocalContext.current,
+                navController = appState.navController,
+                reminderViewModel = reminderViewModel,
+                onBackPress = { appState.navigateBack() },
             )
         }
 

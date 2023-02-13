@@ -72,7 +72,8 @@ fun HomeContent(
             )
             Reminders(
                 authViewModel = authViewModel,
-                reminderViewModel = reminderViewModel
+                reminderViewModel = reminderViewModel,
+                navController = navController
             )
         }
     }

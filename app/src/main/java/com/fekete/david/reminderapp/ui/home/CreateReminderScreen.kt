@@ -188,7 +188,6 @@ fun ReminderCreationPart(
                         shortToast(context, "Reminder added successfully!")
                         navController.navigate("home")
                     }
-
                 },
                 modifier = Modifier
                     .fillMaxWidth()

@@ -1,5 +1,6 @@
 package com.fekete.david.reminderapp.ui.home
 
+import android.os.Bundle
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,15 +16,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.os.bundleOf
+import androidx.navigation.NavArgumentBuilder
+import androidx.navigation.NavController
+import androidx.navigation.navArgument
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun Reminders(authViewModel: AuthViewModel, reminderViewModel: ReminderViewModel) {
+fun Reminders(
+    authViewModel: AuthViewModel,
+    reminderViewModel: ReminderViewModel,
+    navController: NavController
+) {
 
     reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid)
     val reminderList by reminderViewModel.reminders.collectAsState()
@@ -39,22 +49,27 @@ fun Reminders(authViewModel: AuthViewModel, reminderViewModel: ReminderViewModel
                 Text(text = "No reminders to display! Create one!")
             }
         } else {
-            RemindersList(list = reminderList!!)
+            RemindersList(list = reminderList!!, navController = navController)
         }
 
     }
 }
 
 @Composable
-fun RemindersList(list: List<Reminder>) {
+fun RemindersList(list: List<Reminder>, navController: NavController) {
     LazyColumn(
         contentPadding = PaddingValues(0.dp),
         verticalArrangement = Arrangement.Center
     ) {
         items(list) { item ->
+            val serializedReminder = Gson().toJson(item)
             ReminderListItem(
                 reminder = item,
-                onClick = {item}
+                onClick = {
+                    navController.navigate(
+                        route = "editreminder/$serializedReminder",
+                    )
+                }
             )
         }
     }
@@ -67,7 +82,7 @@ private fun ReminderListItem(
 ) {
     ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
-        .clickable { onClick }) {
+        .clickable { onClick() }) {
         val (divider, text, date) = createRefs()
         Divider(
             Modifier.constrainAs(divider) {
