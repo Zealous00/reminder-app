@@ -1,6 +1,7 @@
 package com.fekete.david.reminderapp.repository
 
 import com.fekete.david.reminderapp.data.entitiy.Reminder
+import com.fekete.david.reminderapp.data.entitiy.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -9,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 
 const val REMINDERS_COLLECTION_REF = "reminders"
+const val PROFILES_COLLECTION_REF = "profiles"
 
 class StorageRepository() {
     val user = FirebaseAuth.getInstance().currentUser
@@ -18,6 +20,7 @@ class StorageRepository() {
     fun getUserId(): String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 
     private val remindersRef = Firebase.firestore.collection(REMINDERS_COLLECTION_REF)
+    private val profilesRef = Firebase.firestore.collection(PROFILES_COLLECTION_REF)
 
     fun getUserReminders(
         userId: String,
@@ -72,12 +75,6 @@ class StorageRepository() {
     }
 
     suspend fun updateReminder(
-//        reminderId: String,
-//        message: String,
-//        locationX: String,
-//        locationY: String,
-//        reminderTime: LocalDate,
-//        reminderSeen: Boolean,
         reminder: Reminder,
         onComplete: (Boolean) -> Unit
     ) {
@@ -92,12 +89,16 @@ class StorageRepository() {
         remindersRef.document(reminder.id).update(updateData)
             .addOnCompleteListener { result -> onComplete.invoke(result.isSuccessful) }.await()
     }
+
+    suspend fun addUserProfile(
+        user: User,
+        onComplete: (Boolean) -> Unit
+    ) {
+        val documentId = profilesRef.document().id
+        profilesRef.document(documentId).set(user)
+            .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
+    }
 }
 
-//sealed class Resources<T>(
-//    val data: T? = null,
-//    val throwable: Throwable? = null
-//) {
-//    class Success<T>(data: T?) : Resources<T>(data = data)
-//    class Error<T>(throwable: Throwable?) : Resources<T>(throwable = throwable)
-//}
+
+

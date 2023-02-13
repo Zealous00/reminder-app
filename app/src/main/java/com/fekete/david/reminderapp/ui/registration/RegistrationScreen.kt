@@ -25,10 +25,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.fekete.david.reminderapp.data.entitiy.User
 import com.fekete.david.reminderapp.ui.login.StoreUserCredentials
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.ProfileViewModel
 import com.fekete.david.reminderapp.viewmodel.UserLoginStatus
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
@@ -36,6 +43,7 @@ fun RegistrationScreen(
     navController: NavHostController,
     context: Context,
     authViewModel: AuthViewModel,
+    profileViewModel: ProfileViewModel,
     onBackPress: () -> Unit
 ) {
     val userEmail = remember { mutableStateOf("") }
@@ -46,8 +54,7 @@ fun RegistrationScreen(
     val pinCodeSize = 4
 
     val localContext = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val dataStore = StoreUserCredentials(context = localContext)
+    val scope = CoroutineScope(Dispatchers.Main)
 
     val registerStatus by authViewModel.userLoginStatus.collectAsState()
 
@@ -60,12 +67,25 @@ fun RegistrationScreen(
                 )
             }
             UserLoginStatus.Succesful -> {
-//                shortToast(context, "Login successful!")
+                shortToast(context, "Registration successful!")
+                scope.launch {
+                    profileViewModel.addUserProfile(
+                        User(
+                            id = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
+                            email = userEmail.value,
+                            phoneNumber = phoneNumber.value,
+                            pinCode = pincode.value,
+                            imageUri = ""
+                        )
+                    )
+                }
                 navController.navigate("home")
             }
             null -> {}
         }
     }
+
+
 
     Surface() {
         Column(

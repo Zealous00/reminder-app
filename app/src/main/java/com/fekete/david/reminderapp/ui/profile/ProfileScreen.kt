@@ -46,14 +46,14 @@ fun ProfileScreen(
     val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
     val dataStore = StoreUserCredentials(context = context)
-    val savedUser =
-        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
+    val savedUser = User()
+//        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
     Surface() {
         Column {
             TopAppBar() {
                 IconButton(
                     onClick = saveUser(
-                        user = savedUser,
+//                        user = savedUser,
                         dataStore = dataStore,
                         onBackPress = onBackPress
                     )
@@ -74,7 +74,7 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .background(color = MaterialTheme.colors.primary)
                         .weight(0.4f),
-                    user = savedUser,
+//                    user = savedUser,
                     dataStore = dataStore
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -83,7 +83,7 @@ fun ProfileScreen(
                         .fillMaxWidth()
 //                        .background(color = Color.Red)
                         .weight(0.6f),
-                    user = savedUser,
+//                    user = savedUser,
                     navController = navController,
                     authViewModel = authViewModel,
                     currentUser = currentUser
@@ -94,7 +94,7 @@ fun ProfileScreen(
 }
 
 fun saveUser(
-    user: State<User?>,
+//    user: State<User?>,
     dataStore: StoreUserCredentials,
     onBackPress: () -> Unit
 ): () -> Unit {
@@ -103,7 +103,11 @@ fun saveUser(
 
 
 @Composable
-fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCredentials) {
+fun ImagePart(
+    modifier: Modifier,
+//    user: State<User?>,
+    dataStore: StoreUserCredentials
+) {
 //    var imageUri = remember { dataStore.getImageUri ?: "" }
     var imageUri = rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -114,14 +118,14 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
             imageUri.value
         }
     )
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            scope.launch { dataStore.setImageUri(uri.toString()) }
-            imageUri.value = it.toString()
-        }
-    }
+//    val launcher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.GetContent()
+//    ) { uri: Uri? ->
+//        uri?.let {
+//            scope.launch { dataStore.setImageUri(uri.toString()) }
+//            imageUri.value = it.toString()
+//        }
+//    }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -138,11 +142,11 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
                 contentDescription = "",
                 modifier = Modifier
                     .clip(CircleShape)
-                    .padding(16.dp)
+                    .padding(16.dp),
 //                    .size(50.dp)
-                    .clickable {
-                        launcher.launch("image/*")
-                    },
+//                    .clickable {
+//                        launcher.launch("image/*")
+//                    },
                 contentScale = ContentScale.Crop
             )
 //            Icon(
@@ -176,7 +180,7 @@ fun ImagePart(modifier: Modifier, user: State<User?>, dataStore: StoreUserCreden
 @Composable
 fun DataPart(
     modifier: Modifier,
-    user: State<User?>,
+//    user: State<User?>,
     navController: NavController,
     authViewModel: AuthViewModel,
     currentUser: FirebaseUser?
@@ -262,7 +266,7 @@ fun DataPart(
                 ) {
                     Text(
 //                color = Color.Black,
-                        text = user.value?.phoneNumber + "",
+                        text =  "",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,

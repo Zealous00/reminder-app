@@ -17,6 +17,7 @@ import com.fekete.david.reminderapp.ui.login.LoginScreen
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
 import com.fekete.david.reminderapp.ui.registration.RegistrationScreen
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
+import com.fekete.david.reminderapp.viewmodel.ProfileViewModel
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
@@ -27,7 +28,8 @@ fun ReminderApp(
     appState: ReminderAppState = rememberReminderAppState(),
     modifier: Modifier,
     authViewModel: AuthViewModel = AuthViewModel(),
-    reminderViewModel: ReminderViewModel = ReminderViewModel(StorageRepository())
+    reminderViewModel: ReminderViewModel = ReminderViewModel(StorageRepository()),
+    profileViewModel: ProfileViewModel = ProfileViewModel(StorageRepository())
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
     var startlocation = ""
@@ -72,6 +74,7 @@ fun ReminderApp(
                 navController = appState.navController,
                 context = LocalContext.current,
                 authViewModel = authViewModel,
+                profileViewModel = profileViewModel,
                 onBackPress = { appState.navigateBack() }
             )
         }
