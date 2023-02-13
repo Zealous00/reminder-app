@@ -28,6 +28,9 @@ import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,8 +54,7 @@ fun EditReminderScreen(
     if (serializedReminder != null) {
         reminderToEdit = Gson().fromJson(serializedReminder.toString(), Reminder::class.java)
     }
-
-//    val reminderToEdit = Reminder()
+    println(reminderToEdit.id)
     Surface() {
         Column(
         ) {
@@ -96,6 +98,11 @@ fun ReminderEditionPart(
     val locationX = remember { mutableStateOf(reminderToEdit.locationX) }
     val locationY = remember { mutableStateOf(reminderToEdit.locationY) }
 
+    val reminderSeen = remember { mutableStateOf(reminderToEdit.reminderSeen) }
+
+    val scope = CoroutineScope(Dispatchers.Main)
+
+
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
@@ -126,7 +133,7 @@ fun ReminderEditionPart(
         }, hour, minute, false
     )
 
-    //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
+//Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -176,8 +183,9 @@ fun ReminderEditionPart(
                 Text(text = "Edit Time", color = Color.White)
             }
             Spacer(modifier = Modifier.height(8.dp))
+            val timeWithoutSeconds = reminderTime.value.substring(0, reminderTime.value.length - 3)
             Text(
-                text = "Selected Time: ${reminderTime.value}",
+                text = "Selected Time: $timeWithoutSeconds",
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
@@ -190,18 +198,22 @@ fun ReminderEditionPart(
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
                         shortToast(context, "Please choose date and time!")
                     } else {
-                        reminderViewModel.addReminder(
-                            Reminder(
-                                message = reminderMessage.value,
-                                locationX = "locationX",
-                                locationY = "locationY",
-                                reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
-                                creationTime = Timestamp(Date().time),
-                                userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-                                reminderSeen = false
+                        scope.launch {
+                            reminderViewModel.updateReminder(
+                                Reminder(
+                                    id = reminderToEdit.id,
+                                    message = reminderMessage.value,
+                                    locationX = locationX.value,
+                                    locationY = locationY.value,
+                                    reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
+                                    creationTime = reminderToEdit.creationTime,
+                                    userId = reminderToEdit.userId,
+                                    reminderSeen = reminderSeen.value
+                                )
                             )
-                        )
-                        shortToast(context, "Reminder added successfully!")
+                        }
+                        shortToast(context, "Reminder updated successfully!")
+                        Thread.sleep(200L)
                         navController.navigate("home")
                     }
                 },

@@ -25,6 +25,10 @@ import com.fekete.david.reminderapp.viewmodel.AuthViewModel
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,9 +38,16 @@ fun Reminders(
     reminderViewModel: ReminderViewModel,
     navController: NavController
 ) {
+    val scope = CoroutineScope(Dispatchers.Main)
+//    scope.launch { reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid) }
 
     reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid)
+
     val reminderList by reminderViewModel.reminders.collectAsState()
+
+
+
+
 
 
     Column(modifier = Modifier.fillMaxWidth()) {

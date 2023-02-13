@@ -14,6 +14,9 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
     private val _reminders = MutableStateFlow<List<Reminder>?>(null)
     val reminders = _reminders.asStateFlow()
 
+    private val _updateStatus = MutableStateFlow<ReminderStatus?>(null)
+    val updateStatus = _updateStatus.asStateFlow()
+
 
     private val hasUser: Boolean
         get() = repository.hasUser()
@@ -21,16 +24,14 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
     private val user: FirebaseUser?
         get() = repository.user
 
-    fun addReminder(reminder: Reminder) {
+    suspend fun addReminder(reminder: Reminder) {
         if (hasUser) {
             repository.addReminder(reminder) {
                 if (it) {
                     _reminderStatus.value = ReminderStatus.Succesful
-                    println("SUCCESFULLY ADDED")
                 } else {
                     _reminderStatus.value =
                         ReminderStatus.Failure(Exception("Could not add reminder!"))
-                    println("SHIT IS GOING ON NOT ADDED")
 
                 }
             }
@@ -48,6 +49,16 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
         }
     }
 
+    suspend fun updateReminder(reminder: Reminder) {
+        repository.updateReminder(reminder) {
+            if (it) {
+                _updateStatus.value = ReminderStatus.Succesful
+            } else {
+                _updateStatus.value =
+                    ReminderStatus.Failure(Exception("Could not update reminder!"))
+            }
+        }
+    }
 //    fun getReminder(reminderId: String) {
 //        repository.getReminder(reminderId = reminderId, onError = {}) {
 //

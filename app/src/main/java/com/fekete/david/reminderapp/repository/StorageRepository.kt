@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 
 const val REMINDERS_COLLECTION_REF = "reminders"
@@ -24,17 +25,15 @@ class StorageRepository() {
         onError: (Throwable?) -> Unit,
 
         ) {
-        var reminderList = ArrayList<Reminder>()
+        val reminderList = ArrayList<Reminder>()
 //        reminderList
         remindersRef.orderBy("reminderTime").whereEqualTo("userId", userId).get()
             .addOnSuccessListener { snapshot ->
                 if (snapshot != null) {
                     for (reminder in snapshot.documents) {
                         val r = reminder.toObject(Reminder::class.java)
-                        println(r)
                         r?.id = reminder.id
                         reminderList.add(r!!)
-                        println(r)
                     }
                     onSuccess.invoke(reminderList)
                 } else {
@@ -55,14 +54,13 @@ class StorageRepository() {
             .addOnFailureListener { result -> onError.invoke(result.cause) }
     }
 
-    fun addReminder(
+    suspend fun addReminder(
         reminder: Reminder,
         onComplete: (Boolean) -> Unit
     ) {
         val documentId = remindersRef.document().id
         remindersRef.document(documentId).set(reminder)
-            .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }
-        println(reminder)
+            .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
     }
 
     fun deleteReminder(
@@ -73,25 +71,26 @@ class StorageRepository() {
             .addOnCompleteListener { result -> onComplete.invoke(result.isSuccessful) }
     }
 
-    fun updateReminder(
-        reminderId: String,
-        message: String,
-        locationX: String,
-        locationY: String,
-        reminderTime: LocalDate,
-        reminderSeen: Boolean,
+    suspend fun updateReminder(
+//        reminderId: String,
+//        message: String,
+//        locationX: String,
+//        locationY: String,
+//        reminderTime: LocalDate,
+//        reminderSeen: Boolean,
+        reminder: Reminder,
         onComplete: (Boolean) -> Unit
     ) {
         val updateData = hashMapOf<String, Any>(
-            "message" to message,
-            "locationX" to locationX,
-            "locationY" to locationY,
-            "reminderTime" to reminderTime,
-            "reminderSeen" to reminderSeen
+            "message" to reminder.message,
+            "locationX" to reminder.locationX,
+            "locationY" to reminder.locationY,
+            "reminderTime" to reminder.reminderTime,
+            "reminderSeen" to reminder.reminderSeen
         )
 
-        remindersRef.document(reminderId).update(updateData)
-            .addOnCompleteListener { result -> onComplete.invoke(result.isSuccessful) }
+        remindersRef.document(reminder.id).update(updateData)
+            .addOnCompleteListener { result -> onComplete.invoke(result.isSuccessful) }.await()
     }
 }
 

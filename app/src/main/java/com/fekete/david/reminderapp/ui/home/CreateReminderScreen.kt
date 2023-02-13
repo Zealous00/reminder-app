@@ -24,6 +24,9 @@ import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -110,6 +113,8 @@ fun ReminderCreationPart(
         }, hour, minute, false
     )
 
+    val scope = CoroutineScope(Dispatchers.Main)
+
     //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
 
     Column(
@@ -174,18 +179,21 @@ fun ReminderCreationPart(
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
                         shortToast(context, "Please choose date and time!")
                     } else {
-                        reminderViewModel.addReminder(
-                            Reminder(
-                                message = reminderMessage.value,
-                                locationX = "locationX",
-                                locationY = "locationY",
-                                reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
-                                creationTime = Timestamp(Date().time),
-                                userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-                                reminderSeen = false
+                        scope.launch {
+                            reminderViewModel.addReminder(
+                                Reminder(
+                                    message = reminderMessage.value,
+                                    locationX = "locationX",
+                                    locationY = "locationY",
+                                    reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
+                                    creationTime = Timestamp(Date().time),
+                                    userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
+                                    reminderSeen = false
+                                )
                             )
-                        )
+                        }
                         shortToast(context, "Reminder added successfully!")
+                        Thread.sleep(200L)
                         navController.navigate("home")
                     }
                 },
