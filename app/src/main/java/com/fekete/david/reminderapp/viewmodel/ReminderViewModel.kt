@@ -59,6 +59,16 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
             }
         }
     }
+
+    suspend fun deleteReminder(reminderId: String) {
+        repository.deleteReminder(reminderId) {
+            if (it) {
+                println("Reminder deleted!")
+            } else {
+                println("Reminder wasnt deleted!")
+            }
+        }
+    }
 //    fun getReminder(reminderId: String) {
 //        repository.getReminder(reminderId = reminderId, onError = {}) {
 //

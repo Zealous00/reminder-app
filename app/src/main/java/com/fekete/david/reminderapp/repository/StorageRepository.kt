@@ -75,7 +75,7 @@ class StorageRepository() {
             .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
     }
 
-    fun deleteReminder(
+    suspend fun deleteReminder(
         reminderId: String,
         onComplete: (Boolean) -> Unit
     ) {

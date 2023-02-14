@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.DatePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -141,7 +142,9 @@ fun ReminderEditionPart(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(0.9f),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .weight(0.9f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -213,7 +216,7 @@ fun ReminderEditionPart(
                             )
                         }
                         shortToast(context, "Reminder updated successfully!")
-                        Thread.sleep(200L)
+
                         navController.navigate("home")
                     }
                 },
@@ -226,9 +229,35 @@ fun ReminderEditionPart(
             }
         }
 
-    }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .weight(0.1f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Button(
+                onClick = {
+                    scope.launch {
+                        reminderViewModel.deleteReminder(reminderToEdit.id)
+                    }
+                    shortToast(context, "Reminder deleted successfully!")
 
+                    navController.navigate("home")
+
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(corner = CornerSize(50.dp)),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+            ) {
+                Text(text = "Delete reminder")
+            }
+        }
+    }
 }
+
 
 @Composable
 fun EditTopBar(onBackPress: () -> Unit) {

@@ -165,8 +165,13 @@ fun ReminderCreationPart(
                 Text(text = "Select Time", color = Color.White)
             }
             Spacer(modifier = Modifier.height(8.dp))
+            var timeWithoutSeconds = ""
+            if (reminderTime.value != "") {
+                timeWithoutSeconds = reminderTime.value.substring(0, reminderTime.value.length - 3)
+            }
+
             Text(
-                text = "Selected Time: ${reminderTime.value}",
+                text = "Selected Time: $timeWithoutSeconds",
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )

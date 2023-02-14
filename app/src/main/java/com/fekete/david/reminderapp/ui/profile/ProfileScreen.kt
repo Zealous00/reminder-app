@@ -43,24 +43,17 @@ fun ProfileScreen(
 ) {
     val currentUser = FirebaseAuth.getInstance().currentUser
     val context = LocalContext.current
-    val dataStore = StoreUserCredentials(context = context)
+
 
     profileViewModel.getUserProfile(FirebaseAuth.getInstance().currentUser?.uid)
 
     val currentUserProfile by profileViewModel.profile.collectAsState()
 
-//    val savedUser = User()
-//        dataStore.getUserFromDataStore.collectAsState(initial = User("", "", "", "", ""))
     Surface() {
         Column {
             TopAppBar() {
                 IconButton(
                     onClick = {}
-//                    saveUser(
-//                        userProfile = currentUserProfile,
-//                        dataStore = dataStore,
-//                        onBackPress = onBackPress
-//                    )
                 ) {
                     Icon(
                         painter = rememberVectorPainter(image = Icons.Default.ArrowBack),
@@ -95,14 +88,6 @@ fun ProfileScreen(
         }
     }
 }
-
-//fun saveUser(
-//    dataStore: StoreUserCredentials,
-//    onBackPress: () -> Unit,
-//    userProfile: User?
-//): () -> Unit {
-//    return onBackPress
-//}
 
 
 @Composable
