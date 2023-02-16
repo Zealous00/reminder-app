@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -151,6 +152,16 @@ fun ReminderEditionPart(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Edit reminder",
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = reminderMessage.value,
@@ -195,6 +206,8 @@ fun ReminderEditionPart(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(text = "Edit priority:")
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
