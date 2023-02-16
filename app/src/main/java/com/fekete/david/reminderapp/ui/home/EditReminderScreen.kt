@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
@@ -100,6 +101,8 @@ fun ReminderEditionPart(
     val locationY = remember { mutableStateOf(reminderToEdit.locationY) }
 
     val reminderSeen = remember { mutableStateOf(reminderToEdit.reminderSeen) }
+    val priority = remember { mutableStateOf(reminderToEdit.priority) }
+
 
     val scope = CoroutineScope(Dispatchers.Main)
 
@@ -192,6 +195,28 @@ fun ReminderEditionPart(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
+            Text(text = "Edit priority:")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = priority.value == Priority.LOW,
+                    onClick = { priority.value = Priority.LOW },
+                )
+                Text(text = "Low")
+                Spacer(modifier = Modifier.size(20.dp))
+
+                RadioButton(
+                    selected = priority.value == Priority.MEDIUM,
+                    onClick = { priority.value = Priority.MEDIUM }
+                )
+                Text(text = "Medium")
+                Spacer(modifier = Modifier.size(20.dp))
+
+                RadioButton(
+                    selected = priority.value == Priority.HIGH,
+                    onClick = { priority.value = Priority.HIGH }
+                )
+                Text(text = "High")
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
@@ -211,7 +236,8 @@ fun ReminderEditionPart(
                                     reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
                                     creationTime = reminderToEdit.creationTime,
                                     userId = reminderToEdit.userId,
-                                    reminderSeen = reminderSeen.value
+                                    reminderSeen = reminderSeen.value,
+                                    priority = priority.value
                                 )
                             )
                         }

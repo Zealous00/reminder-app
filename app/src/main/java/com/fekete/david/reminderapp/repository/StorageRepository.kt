@@ -93,7 +93,8 @@ class StorageRepository() {
             "locationX" to reminder.locationX,
             "locationY" to reminder.locationY,
             "reminderTime" to reminder.reminderTime,
-            "reminderSeen" to reminder.reminderSeen
+            "reminderSeen" to reminder.reminderSeen,
+            "priority" to reminder.priority
         )
 
         remindersRef.document(reminder.id).update(updateData)

@@ -180,7 +180,6 @@ fun ReminderCreationPart(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(text = "Select priority:")
-//            Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = priority.value == Priority.LOW,
