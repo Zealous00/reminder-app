@@ -53,7 +53,7 @@ fun ProfileScreen(
         Column {
             TopAppBar() {
                 IconButton(
-                    onClick = {}
+                    onClick = { onBackPress() }
                 ) {
                     Icon(
                         painter = rememberVectorPainter(image = Icons.Default.ArrowBack),

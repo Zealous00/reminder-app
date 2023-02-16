@@ -48,10 +48,6 @@ fun EditReminderScreen(
 ) {
     val currentEntry = navController.currentBackStackEntry
     val serializedReminder = currentEntry?.arguments?.get("serializedReminder")
-//    if (serializedReminder != null) {
-//        val reminder = Gson().fromJson(serializedReminder.toString(), Reminder::class.java)
-//        // You can now use the deserialized `reminder` object in your composable
-//    }
 
     var reminderToEdit = Reminder()
     if (serializedReminder != null) {
@@ -237,7 +233,7 @@ fun ReminderEditionPart(
                     if (reminderMessage.value.isEmpty()) {
                         shortToast(context, "Please fill out the message!")
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
-                        shortToast(context, "Please choose date and time!")
+                        shortToast(context, "Please select date and time!")
                     } else {
                         scope.launch {
                             reminderViewModel.updateReminder(

@@ -220,7 +220,7 @@ fun ReminderCreationPart(
                     if (reminderMessage.value.isEmpty()) {
                         shortToast(context, "Please fill out the message!")
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
-                        shortToast(context, "Please choose date and time!")
+                        shortToast(context, "Please select date and time!")
                     } else {
                         scope.launch {
                             reminderViewModel.addReminder(
