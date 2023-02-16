@@ -13,5 +13,10 @@ data class Reminder(
     val reminderTime: Date = Date(),
     val creationTime: Date = Date(),
     val userId: String = "",
-    val reminderSeen: Boolean = false
+    val reminderSeen: Boolean = false,
+    val priority: Priority = Priority.MEDIUM
 ) : java.io.Serializable
+
+enum class Priority {
+    LOW, MEDIUM, HIGH
+}

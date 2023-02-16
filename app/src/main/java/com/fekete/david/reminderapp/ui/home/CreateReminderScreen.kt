@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.DatePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
@@ -81,7 +83,7 @@ fun ReminderCreationPart(
 //    }
     val locationX = remember { mutableStateOf("") }
     val locationY = remember { mutableStateOf("") }
-    val creationTime = remember { mutableStateOf("") }
+    val priority = remember { mutableStateOf(Priority.MEDIUM) }
 
     val datePickerDialog = DatePickerDialog(
         context,
@@ -115,7 +117,7 @@ fun ReminderCreationPart(
 
     val scope = CoroutineScope(Dispatchers.Main)
 
-    //Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
+//Message, location_x, location_y, reminder_time, creation_time, creator_id, reminder_seen
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -175,6 +177,31 @@ fun ReminderCreationPart(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Select priority:")
+//            Spacer(modifier = Modifier.height(8.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = priority.value == Priority.LOW,
+                    onClick = { priority.value = Priority.LOW },
+                )
+                Text(text = "Low")
+                Spacer(modifier = Modifier.size(20.dp))
+
+                RadioButton(
+                    selected = priority.value == Priority.MEDIUM,
+                    onClick = { priority.value = Priority.MEDIUM }
+                )
+                Text(text = "Medium")
+                Spacer(modifier = Modifier.size(20.dp))
+
+                RadioButton(
+                    selected = priority.value == Priority.HIGH,
+                    onClick = { priority.value = Priority.HIGH }
+                )
+                Text(text = "High")
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
@@ -193,7 +220,8 @@ fun ReminderCreationPart(
                                     reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
                                     creationTime = Timestamp(Date().time),
                                     userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-                                    reminderSeen = false
+                                    reminderSeen = false,
+                                    priority = priority.value
                                 )
                             )
                         }
