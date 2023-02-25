@@ -15,7 +15,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
-//    println(FirebaseAuth.getInstance().currentUser?.email)
+
+    //    println(FirebaseAuth.getInstance().currentUser?.email)
     override fun onCreate(savedInstanceState: Bundle?) {
 //        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
+        Graph.provide(this)
     }
 }
 
