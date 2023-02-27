@@ -3,10 +3,10 @@ package com.fekete.david.reminderapp.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.fekete.david.reminderapp.worker.NotificationWorker
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class ReminderBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -25,9 +25,22 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
             }
         }.build()
 
-        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInputData(reminderData)
-            .build()
-        WorkManager.getInstance(context!!).enqueue(notificationRequest)
+//        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+//            .setInputData(reminderData)
+//            .build()
+//        WorkManager.getInstance(context!!).enqueue(notificationRequest)
+
+        val fromMinutes: Duration = Duration.ofMinutes(60)
+        val periodicRequest =
+            PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
+                .setInputData(reminderData)
+                .build()
+        WorkManager.getInstance(context!!).enqueueUniquePeriodicWork(
+            reminderData.keyValueMap.get("id") as String,
+            ExistingPeriodicWorkPolicy.KEEP,
+            periodicRequest
+        )
+//        WorkManager.getInstance(context!!).enqueue(periodicRequest)
+
     }
 }

@@ -83,7 +83,6 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
         repository.updateReminder(reminder) {
             if (it) {
                 _updateStatus.value = ReminderStatus.Successful
-                getUserReminders(reminder.userId)
             } else {
                 _updateStatus.value =
                     ReminderStatus.Failure(Exception("Could not update reminder!"))
