@@ -75,15 +75,17 @@ fun RemindersList(list: List<Reminder>, navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         items(list) { item ->
-            val serializedReminder = Gson().toJson(item)
-            ReminderListItem(
-                reminder = item,
-                onClick = {
-                    navController.navigate(
-                        route = "editreminder/$serializedReminder",
-                    )
-                }
-            )
+            if (item.reminderSeen) {
+                val serializedReminder = Gson().toJson(item)
+                ReminderListItem(
+                    reminder = item,
+                    onClick = {
+                        navController.navigate(
+                            route = "editreminder/$serializedReminder",
+                        )
+                    }
+                )
+            }
         }
     }
 }
