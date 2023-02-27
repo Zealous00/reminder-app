@@ -88,6 +88,7 @@ fun ReminderCreationPart(
     val locationX = remember { mutableStateOf("") }
     val locationY = remember { mutableStateOf("") }
     val priority = remember { mutableStateOf(Priority.MEDIUM) }
+    val hasNotification = remember { mutableStateOf(true) }
 
     val datePickerDialog = DatePickerDialog(
         context,
@@ -190,8 +191,16 @@ fun ReminderCreationPart(
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = hasNotification.value,
+                    onCheckedChange = { hasNotification.value = it }
+                )
+                Text(text = "Send notification")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Select priority:")
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
@@ -223,6 +232,10 @@ fun ReminderCreationPart(
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
                         shortToast(context, "Please select date and time!")
                     } else {
+                        var reminderSeen = true
+                        if (hasNotification.value) {
+                            reminderSeen = false
+                        }
                         val newReminder = Reminder(
                             message = reminderMessage.value,
                             locationX = "locationX",
@@ -230,8 +243,9 @@ fun ReminderCreationPart(
                             reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
                             creationTime = Timestamp(Date().time),
                             userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-                            reminderSeen = false,
-                            priority = priority.value
+                            reminderSeen = reminderSeen,
+                            priority = priority.value,
+                            hasNotification = hasNotification.value
                         )
                         scope.launch {
                             val result = reminderViewModel.addReminder(
@@ -239,23 +253,31 @@ fun ReminderCreationPart(
                             )
                             when (result.first) {
                                 ReminderStatus.Successful -> {
-                                    val uid = result.second
-                                    val reminderData = Data.Builder()
-                                        .putString("id", uid)
-                                        .putString("message", newReminder.message)
-                                        .putString("locationX", newReminder.locationX)
-                                        .putString("locationY", newReminder.locationY)
-                                        .putLong("reminderTime", newReminder.reminderTime.time)
-                                        .putLong("creationTime", newReminder.creationTime.time)
-                                        .putString("userId", newReminder.userId)
-                                        .putBoolean("reminderSeen", newReminder.reminderSeen)
-                                        .putString("priority", newReminder.priority.name)
-                                        .build()
-                                    val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-                                        .setInputData(reminderData)
-                                        .build()
-                                    WorkManager.getInstance(context).enqueue(workRequest)
+                                    if (newReminder.hasNotification) {
+                                        val uid = result.second
+                                        val reminderData = Data.Builder()
+                                            .putString("id", uid)
+                                            .putString("message", newReminder.message)
+                                            .putString("locationX", newReminder.locationX)
+                                            .putString("locationY", newReminder.locationY)
+                                            .putLong("reminderTime", newReminder.reminderTime.time)
+                                            .putLong("creationTime", newReminder.creationTime.time)
+                                            .putString("userId", newReminder.userId)
+                                            .putBoolean("reminderSeen", newReminder.reminderSeen)
+                                            .putString("priority", newReminder.priority.name)
+                                            .putBoolean(
+                                                "hasNotification",
+                                                newReminder.hasNotification
+                                            )
+                                            .build()
+                                        val workRequest =
+                                            OneTimeWorkRequestBuilder<ReminderWorker>()
+                                                .setInputData(reminderData)
+                                                .build()
+                                        WorkManager.getInstance(context).enqueue(workRequest)
+                                    }
                                 }
+                                else -> {}
                             }
                         }
 

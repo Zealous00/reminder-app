@@ -38,7 +38,8 @@ class NotificationWorker(private val context: Context, private val workerParams:
             creationTime = Date(inputData.getLong("creationTime", 0)),
             userId = inputData.getString("userId") ?: "",
             reminderSeen = true,
-            priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name)
+            priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name),
+            hasNotification = inputData.getBoolean("hasNotification", false)
         )
 
         val builder = NotificationCompat.Builder(

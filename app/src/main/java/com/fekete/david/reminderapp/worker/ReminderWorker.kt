@@ -29,7 +29,8 @@ class ReminderWorker(
             creationTime = Date(inputData.getLong("creationTime", 0)),
             userId = inputData.getString("userId") ?: "",
             reminderSeen = inputData.getBoolean("reminderSeen", false),
-            priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name)
+            priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name),
+            hasNotification = inputData.getBoolean("hasNotification", false)
         )
         println(reminder)
 
@@ -37,8 +38,10 @@ class ReminderWorker(
 //        if (timeDiff > 0) {
 //        scheduleNotification(timeDiff, reminder)
 //        }
+        if (reminder.hasNotification) {
+            scheduleNotification(reminder)
+        }
 
-        scheduleNotification(reminder)
         return Result.success()
     }
 
@@ -85,11 +88,12 @@ class ReminderWorker(
             putString("userId", reminder.userId)
             putBoolean("reminderSeen", reminder.reminderSeen)
             putString("priority", reminder.priority.name)
+            putBoolean("hasNotification", reminder.hasNotification)
         }
         val reminderIntent = Intent(context, ReminderBroadcastReceiver::class.java)
             .putExtra("reminderBundle", reminderBundle)
         val pendingIntent = PendingIntent.getBroadcast(
-            context, reminder.id.hashCode(), reminderIntent,  PendingIntent.FLAG_MUTABLE
+            context, reminder.id.hashCode(), reminderIntent, PendingIntent.FLAG_MUTABLE
         )
 
 //        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()

@@ -68,7 +68,8 @@ class StorageRepository() {
             "creationTime" to reminder.creationTime,
             "userId" to reminder.userId,
             "reminderSeen" to reminder.reminderSeen,
-            "priority" to reminder.priority
+            "priority" to reminder.priority,
+            "hasNotification" to reminder.hasNotification
         )
 //        val documentId = remindersRef.document().id
 //        remindersRef.document(documentId).set(addData)
@@ -98,7 +99,8 @@ class StorageRepository() {
             "locationY" to reminder.locationY,
             "reminderTime" to reminder.reminderTime,
             "reminderSeen" to reminder.reminderSeen,
-            "priority" to reminder.priority
+            "priority" to reminder.priority,
+            "hasNotification" to reminder.hasNotification
         )
 
         remindersRef.document(reminder.id).update(updateData)

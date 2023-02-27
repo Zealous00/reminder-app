@@ -99,6 +99,7 @@ fun ReminderEditionPart(
 
     val reminderSeen = remember { mutableStateOf(reminderToEdit.reminderSeen) }
     val priority = remember { mutableStateOf(reminderToEdit.priority) }
+    val hasNotification = remember { mutableStateOf(reminderToEdit.hasNotification) }
 
 
     val scope = CoroutineScope(Dispatchers.Main)
@@ -244,29 +245,32 @@ fun ReminderEditionPart(
                             creationTime = reminderToEdit.creationTime,
                             userId = reminderToEdit.userId,
                             reminderSeen = reminderSeen.value,
-                            priority = priority.value
+                            priority = priority.value,
+                            hasNotification = hasNotification.value
                         )
                         scope.launch {
                             reminderViewModel.updateReminder(
                                 newReminder
                             )
                         }
-                        val reminderData = Data.Builder()
-                            .putString("id", newReminder.id)
-                            .putString("message", newReminder.message)
-                            .putString("locationX", newReminder.locationX)
-                            .putString("locationY", newReminder.locationY)
-                            .putLong("reminderTime", newReminder.reminderTime.time)
-                            .putLong("creationTime", newReminder.creationTime.time)
-                            .putString("userId", newReminder.userId)
-                            .putBoolean("reminderSeen", newReminder.reminderSeen)
-                            .putString("priority", newReminder.priority.name)
-                            .build()
-                        val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-                            .setInputData(reminderData)
-                            .build()
-                        WorkManager.getInstance(context).enqueue(workRequest)
-
+                        if (newReminder.hasNotification) {
+                            val reminderData = Data.Builder()
+                                .putString("id", newReminder.id)
+                                .putString("message", newReminder.message)
+                                .putString("locationX", newReminder.locationX)
+                                .putString("locationY", newReminder.locationY)
+                                .putLong("reminderTime", newReminder.reminderTime.time)
+                                .putLong("creationTime", newReminder.creationTime.time)
+                                .putString("userId", newReminder.userId)
+                                .putBoolean("reminderSeen", newReminder.reminderSeen)
+                                .putString("priority", newReminder.priority.name)
+                                .putBoolean("hasNotification", newReminder.hasNotification)
+                                .build()
+                            val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                                .setInputData(reminderData)
+                                .build()
+                            WorkManager.getInstance(context).enqueue(workRequest)
+                        }
 
                         shortToast(context, "Reminder updated successfully!")
 
