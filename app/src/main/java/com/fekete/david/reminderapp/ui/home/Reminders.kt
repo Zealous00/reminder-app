@@ -61,8 +61,20 @@ fun Reminders(
                 Text(text = "No reminders to display! Create one!")
             }
         } else {
-            Thread.sleep(300L)
-            RemindersList(list = reminderList!!, navController = navController)
+            val filteredList = reminderList?.filter { reminder -> reminder.reminderSeen }
+            if (filteredList == null || filteredList.isEmpty()){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "No reminders to display! Create one!")
+                }
+            }else{
+                Thread.sleep(300L)
+                RemindersList(list = filteredList, navController = navController)
+            }
+
         }
 
     }
@@ -75,7 +87,7 @@ fun RemindersList(list: List<Reminder>, navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         items(list) { item ->
-            if (item.reminderSeen) {
+//            if (item.reminderSeen) {
                 val serializedReminder = Gson().toJson(item)
                 ReminderListItem(
                     reminder = item,
@@ -85,7 +97,7 @@ fun RemindersList(list: List<Reminder>, navController: NavController) {
                         )
                     }
                 )
-            }
+//            }
         }
     }
 }
