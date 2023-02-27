@@ -40,6 +40,7 @@ class ReminderWorker(
             reminderSeen = inputData.getBoolean("reminderSeen", false),
             priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name)
         )
+        println(reminder)
 
 //        val timeDiff = reminder.reminderTime.time - System.currentTimeMillis()
 //        if (timeDiff > 0) {
@@ -88,11 +89,11 @@ class ReminderWorker(
             putString("message", reminder.message)
             putString("locationX", reminder.locationX)
             putString("locationY", reminder.locationY)
-            putSerializable("reminderTime", reminder.reminderTime)
-            putSerializable("creationTime", reminder.creationTime)
+            putLong("reminderTime", reminder.reminderTime.time)
+            putLong("creationTime", reminder.creationTime.time)
             putString("userId", reminder.userId)
             putBoolean("reminderSeen", reminder.reminderSeen)
-            putSerializable("priority", reminder.priority)
+            putString("priority", reminder.priority.name)
         }
         val reminderIntent = Intent(context, ReminderBroadcastReceiver::class.java)
             .putExtra("reminderBundle", reminderBundle)

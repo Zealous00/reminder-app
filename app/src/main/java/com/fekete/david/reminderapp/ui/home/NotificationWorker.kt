@@ -14,12 +14,19 @@ import com.fekete.david.reminderapp.Graph
 import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
+import com.fekete.david.reminderapp.repository.StorageRepository
+import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 class NotificationWorker(private val context: Context, private val workerParams: WorkerParameters) :
     Worker(context, workerParams) {
 
     override fun doWork(): Result {
+        val scope = CoroutineScope(Dispatchers.Main)
+        val reminderViewModel = ReminderViewModel(StorageRepository())
         val notificationId = inputData.getString("id") ?: ""
         val inputData = workerParams.inputData
         val reminder = Reminder(
@@ -30,7 +37,7 @@ class NotificationWorker(private val context: Context, private val workerParams:
             reminderTime = Date(inputData.getLong("reminderTime", 0)),
             creationTime = Date(inputData.getLong("creationTime", 0)),
             userId = inputData.getString("userId") ?: "",
-            reminderSeen = inputData.getBoolean("reminderSeen", false),
+            reminderSeen = true,
             priority = Priority.valueOf(inputData.getString("priority") ?: Priority.MEDIUM.name)
         )
 
@@ -60,6 +67,12 @@ class NotificationWorker(private val context: Context, private val workerParams:
                 return Result.failure()
             }
             notify(notificationId.hashCode(), builder.build())
+
+            scope.launch {
+                reminderViewModel.updateReminder(
+                    reminder
+                )
+            }
         }
 
         return Result.success()
