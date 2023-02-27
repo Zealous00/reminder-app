@@ -294,6 +294,7 @@ fun ReminderEditionPart(
                     scope.launch {
                         reminderViewModel.deleteReminder(reminderToEdit.id)
                     }
+                    WorkManager.getInstance(context).cancelUniqueWork(reminderToEdit.id)
                     shortToast(context, "Reminder deleted successfully!")
 
                     navController.navigate("home")
