@@ -1,10 +1,14 @@
 package com.fekete.david.reminderapp.ui.home
 
 import android.Manifest
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -47,7 +51,8 @@ class ReminderWorker(
     }
 
     private fun scheduleNotification(reminder: Reminder) {
-        val workManager = WorkManager.getInstance(Graph.appContext)
+//        val workManager = WorkManager.getInstance(Graph.appContext)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val reminderData = Data.Builder()
             .putString("id", reminder.id)
             .putString("message", reminder.message)
@@ -60,21 +65,56 @@ class ReminderWorker(
             .putString("priority", reminder.priority.name)
             .build()
 
-        val currentTimeMillis = System.currentTimeMillis()
-        val reminderTimeMillis = reminder.reminderTime.time
-        val delay = reminderTimeMillis - currentTimeMillis
+//        val currentTimeMillis = System.currentTimeMillis()
+//        val reminderTimeMillis = reminder.reminderTime.time
+//        val delay = reminderTimeMillis - currentTimeMillis
 
-        val notificationWorkRequest: OneTimeWorkRequest = if (delay <= 0) {
-            OneTimeWorkRequestBuilder<NotificationWorker>()
-                .setInitialDelay(0, TimeUnit.MILLISECONDS)
-                .setInputData(reminderData)
-                .build()
-        } else {
-            OneTimeWorkRequestBuilder<NotificationWorker>()
-                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .setInputData(reminderData)
-                .build()
+//        val notificationWorkRequest: OneTimeWorkRequest = if (delay <= 0) {
+//            OneTimeWorkRequestBuilder<NotificationWorker>()
+//                .setInitialDelay(0, TimeUnit.MILLISECONDS)
+//                .setInputData(reminderData)
+//                .build()
+//        } else {
+//            OneTimeWorkRequestBuilder<NotificationWorker>()
+//                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+//                .setInputData(reminderData)
+//                .build()
+//        }
+//        workManager.enqueue(notificationWorkRequest)
+
+
+        val reminderBundle = Bundle().apply {
+            putString("id", reminder.id)
+            putString("message", reminder.message)
+            putString("locationX", reminder.locationX)
+            putString("locationY", reminder.locationY)
+            putSerializable("reminderTime", reminder.reminderTime)
+            putSerializable("creationTime", reminder.creationTime)
+            putString("userId", reminder.userId)
+            putBoolean("reminderSeen", reminder.reminderSeen)
+            putSerializable("priority", reminder.priority)
         }
-        workManager.enqueue(notificationWorkRequest)
+        val reminderIntent = Intent(context, ReminderBroadcastReceiver::class.java)
+            .putExtra("reminderBundle", reminderBundle)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, reminder.id.hashCode(), reminderIntent,  PendingIntent.FLAG_MUTABLE
+        )
+
+//        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+//            .setInputData(reminderData)
+//            .build()
+
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            reminder.reminderTime.time,
+            pendingIntent,
+        )
+//
+//        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+//            .setInputData(reminderData)
+//            .setInitialDelay(reminder.reminderTime.time - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+//            .build()
+//
+//        WorkManager.getInstance(context).enqueue(notificationRequest)
     }
 }

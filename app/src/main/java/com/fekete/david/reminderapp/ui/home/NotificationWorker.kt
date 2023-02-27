@@ -19,10 +19,6 @@ import java.util.*
 class NotificationWorker(private val context: Context, private val workerParams: WorkerParameters) :
     Worker(context, workerParams) {
 
-    init {
-        createNotificationChannel()
-    }
-
     override fun doWork(): Result {
         val notificationId = 10
         val inputData = workerParams.inputData
@@ -67,17 +63,5 @@ class NotificationWorker(private val context: Context, private val workerParams:
         }
 
         return Result.success()
-    }
-
-    private fun createNotificationChannel() {
-        val name = "NotificationChannel"
-        val descriptionText = "NotificationChannelDescription"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel("channel_id", name, importance).apply {
-            description = descriptionText
-        }
-        val notificationManager = Graph.appContext
-            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
     }
 }

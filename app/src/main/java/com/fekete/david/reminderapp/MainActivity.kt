@@ -1,5 +1,6 @@
 package com.fekete.david.reminderapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
+import com.fekete.david.reminderapp.ui.home.NotificationService
 import com.fekete.david.reminderapp.ui.theme.ReminderAppTheme
 import com.google.firebase.auth.FirebaseAuth
 
@@ -32,6 +35,9 @@ class MainActivity : ComponentActivity() {
             }
         }
         Graph.provide(this)
+//        startService(Intent(this, NotificationService::class.java))
+        val notificationServiceIntent = Intent(this, NotificationService::class.java)
+        ContextCompat.startForegroundService(this, notificationServiceIntent)
     }
 }
 

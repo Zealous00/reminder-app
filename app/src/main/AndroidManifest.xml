@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +32,12 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <receiver
+            android:name=".ui.home.ReminderBroadcastReceiver"
+            android:exported="false"/>
+        <service android:name=".ui.home.NotificationService"
+            android:exported="false" />
+
     </application>
 
 </manifest>
