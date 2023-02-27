@@ -24,6 +24,9 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
     private val _reminderStatus = MutableStateFlow<ReminderStatus?>(null)
     val reminderStatus = _reminderStatus.asStateFlow()
 
+    private val _addedReminder = MutableStateFlow<ReminderStatus?>(null)
+    val addedReminder = _reminderStatus.asStateFlow()
+
     private val _reminders = MutableStateFlow<List<Reminder>?>(null)
     val reminders = _reminders.asStateFlow()
 
@@ -37,20 +40,33 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
     private val user: FirebaseUser?
         get() = repository.user
 
-    suspend fun addReminder(reminder: Reminder) {
+    //    suspend fun addReminder(reminder: Reminder) {
+//        if (hasUser) {
+//            repository.addReminder(reminder) {
+//                if (it) {
+//                    _reminderStatus.value = ReminderStatus.Succesful
+//                } else {
+//                    _reminderStatus.value =
+//                        ReminderStatus.Failure(Exception("Could not add reminder!"))
+//
+//                }
+//            }
+////            notifyUserOfReminder(reminder)
+//        }
+    suspend fun addReminder(reminder: Reminder): Pair<ReminderStatus, String?> {
         if (hasUser) {
-            repository.addReminder(reminder) {
-                if (it) {
-                    _reminderStatus.value = ReminderStatus.Succesful
-                } else {
-                    _reminderStatus.value =
-                        ReminderStatus.Failure(Exception("Could not add reminder!"))
-
-                }
+            return try {
+                val uid = repository.addReminder(reminder)
+                Pair(ReminderStatus.Successful, uid)
+            } catch (e: Exception) {
+                Pair(ReminderStatus.Failure(Exception("Could not add reminder!")), null)
             }
-//            notifyUserOfReminder(reminder)
+        } else {
+            return Pair(ReminderStatus.Failure(Exception("User not logged in!")), null)
         }
     }
+
+
 
     fun getUserReminders(userId: String?) {
         if (hasUser) {
@@ -66,7 +82,7 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
     suspend fun updateReminder(reminder: Reminder) {
         repository.updateReminder(reminder) {
             if (it) {
-                _updateStatus.value = ReminderStatus.Succesful
+                _updateStatus.value = ReminderStatus.Successful
             } else {
                 _updateStatus.value =
                     ReminderStatus.Failure(Exception("Could not update reminder!"))
@@ -99,7 +115,7 @@ class ReminderViewModel(private val repository: StorageRepository) : ViewModel()
 }
 
 sealed class ReminderStatus {
-    object Succesful : ReminderStatus()
+    object Successful : ReminderStatus()
     class Failure(val exception: Exception?) : ReminderStatus() {
         val exceptionMessage = exception?.localizedMessage
     }

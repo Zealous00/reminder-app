@@ -21,7 +21,7 @@ class ProfileViewModel(private val repository: StorageRepository) : ViewModel() 
         if (hasUser) {
             repository.addUserProfile(user) {
                 if (it) {
-                    _userProfileStatus.value = ReminderStatus.Succesful
+                    _userProfileStatus.value = ReminderStatus.Successful
                 } else {
                     _userProfileStatus.value =
                         ReminderStatus.Failure(Exception("Could not add reminder!"))

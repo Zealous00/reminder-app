@@ -53,17 +53,17 @@ class ReminderWorker(
     private fun scheduleNotification(reminder: Reminder) {
 //        val workManager = WorkManager.getInstance(Graph.appContext)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val reminderData = Data.Builder()
-            .putString("id", reminder.id)
-            .putString("message", reminder.message)
-            .putString("locationX", reminder.locationX)
-            .putString("locationY", reminder.locationY)
-            .putLong("reminderTime", reminder.reminderTime.time)
-            .putLong("creationTime", reminder.creationTime.time)
-            .putString("userId", reminder.userId)
-            .putBoolean("reminderSeen", reminder.reminderSeen)
-            .putString("priority", reminder.priority.name)
-            .build()
+//        val reminderData = Data.Builder()
+//            .putString("id", reminder.id)
+//            .putString("message", reminder.message)
+//            .putString("locationX", reminder.locationX)
+//            .putString("locationY", reminder.locationY)
+//            .putLong("reminderTime", reminder.reminderTime.time)
+//            .putLong("creationTime", reminder.creationTime.time)
+//            .putString("userId", reminder.userId)
+//            .putBoolean("reminderSeen", reminder.reminderSeen)
+//            .putString("priority", reminder.priority.name)
+//            .build()
 
 //        val currentTimeMillis = System.currentTimeMillis()
 //        val reminderTimeMillis = reminder.reminderTime.time

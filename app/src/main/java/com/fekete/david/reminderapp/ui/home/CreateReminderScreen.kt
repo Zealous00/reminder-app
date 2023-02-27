@@ -30,6 +30,7 @@ import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
+import com.fekete.david.reminderapp.viewmodel.ReminderStatus
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
@@ -225,7 +226,7 @@ fun ReminderCreationPart(
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
                         shortToast(context, "Please select date and time!")
                     } else {
-                        val newReminder =  Reminder(
+                        val newReminder = Reminder(
                             message = reminderMessage.value,
                             locationX = "locationX",
                             locationY = "locationY",
@@ -236,27 +237,31 @@ fun ReminderCreationPart(
                             priority = priority.value
                         )
                         scope.launch {
-                            reminderViewModel.addReminder(
-                               newReminder
+                            val result = reminderViewModel.addReminder(
+                                newReminder
                             )
+                            when (result.first) {
+                                ReminderStatus.Successful -> {
+                                    val uid = result.second
+                                    val reminderData = Data.Builder()
+                                        .putString("id", uid)
+                                        .putString("message", newReminder.message)
+                                        .putString("locationX", newReminder.locationX)
+                                        .putString("locationY", newReminder.locationY)
+                                        .putLong("reminderTime", newReminder.reminderTime.time)
+                                        .putLong("creationTime", newReminder.creationTime.time)
+                                        .putString("userId", newReminder.userId)
+                                        .putBoolean("reminderSeen", newReminder.reminderSeen)
+                                        .putString("priority", newReminder.priority.name)
+                                        .build()
+                                    val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                                        .setInputData(reminderData)
+                                        .build()
+                                    WorkManager.getInstance(context).enqueue(workRequest)
+                                }
+                            }
                         }
 
-                        val reminderData = Data.Builder()
-                            .putString("id", newReminder.id)
-                            .putString("message", newReminder.message)
-                            .putString("locationX", newReminder.locationX)
-                            .putString("locationY", newReminder.locationY)
-                            .putLong("reminderTime", newReminder.reminderTime.time)
-                            .putLong("creationTime", newReminder.creationTime.time)
-                            .putString("userId", newReminder.userId)
-                            .putBoolean("reminderSeen", newReminder.reminderSeen)
-                            .putString("priority", newReminder.priority.name)
-                            .build()
-
-                        val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-                            .setInputData(reminderData)
-                            .build()
-                        WorkManager.getInstance(context).enqueue(workRequest)
 
                         shortToast(context, "Reminder added successfully!")
                         Thread.sleep(200L)

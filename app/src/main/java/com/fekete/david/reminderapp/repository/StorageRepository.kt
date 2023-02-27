@@ -59,8 +59,7 @@ class StorageRepository() {
 
     suspend fun addReminder(
         reminder: Reminder,
-        onComplete: (Boolean) -> Unit
-    ) {
+    ) : String {
         val addData = hashMapOf<String, Any>(
             "message" to reminder.message,
             "locationX" to reminder.locationX,
@@ -71,9 +70,14 @@ class StorageRepository() {
             "reminderSeen" to reminder.reminderSeen,
             "priority" to reminder.priority
         )
+//        val documentId = remindersRef.document().id
+//        remindersRef.document(documentId).set(addData)
+//            .addOnCompleteListener() { result ->
+//                onComplete.invoke(documentId, result.isSuccessful)
+//            }.await()
         val documentId = remindersRef.document().id
-        remindersRef.document(documentId).set(addData)
-            .addOnCompleteListener() { result -> onComplete.invoke(result.isSuccessful) }.await()
+        remindersRef.document(documentId).set(addData).await()
+        return documentId
     }
 
     suspend fun deleteReminder(

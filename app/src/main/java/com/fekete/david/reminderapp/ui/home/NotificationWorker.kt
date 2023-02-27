@@ -20,7 +20,7 @@ class NotificationWorker(private val context: Context, private val workerParams:
     Worker(context, workerParams) {
 
     override fun doWork(): Result {
-        val notificationId = 10
+        val notificationId = inputData.getString("id") ?: ""
         val inputData = workerParams.inputData
         val reminder = Reminder(
             id = inputData.getString("id") ?: "",
@@ -59,7 +59,7 @@ class NotificationWorker(private val context: Context, private val workerParams:
                 // for ActivityCompat#requestPermissions for more details.
                 return Result.failure()
             }
-            notify(notificationId, builder.build())
+            notify(notificationId.hashCode(), builder.build())
         }
 
         return Result.success()

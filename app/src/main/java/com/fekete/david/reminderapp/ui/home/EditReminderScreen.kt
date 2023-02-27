@@ -24,6 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
@@ -235,21 +238,39 @@ fun ReminderEditionPart(
                     } else if (reminderTime.value.isEmpty() || reminderDate.value.isEmpty()) {
                         shortToast(context, "Please select date and time!")
                     } else {
+                        val newReminder = Reminder(
+                            id = reminderToEdit.id,
+                            message = reminderMessage.value,
+                            locationX = locationX.value,
+                            locationY = locationY.value,
+                            reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
+                            creationTime = reminderToEdit.creationTime,
+                            userId = reminderToEdit.userId,
+                            reminderSeen = reminderSeen.value,
+                            priority = priority.value
+                        )
                         scope.launch {
                             reminderViewModel.updateReminder(
-                                Reminder(
-                                    id = reminderToEdit.id,
-                                    message = reminderMessage.value,
-                                    locationX = locationX.value,
-                                    locationY = locationY.value,
-                                    reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
-                                    creationTime = reminderToEdit.creationTime,
-                                    userId = reminderToEdit.userId,
-                                    reminderSeen = reminderSeen.value,
-                                    priority = priority.value
-                                )
+                                newReminder
                             )
                         }
+                        val reminderData = Data.Builder()
+                            .putString("id", newReminder.id)
+                            .putString("message", newReminder.message)
+                            .putString("locationX", newReminder.locationX)
+                            .putString("locationY", newReminder.locationY)
+                            .putLong("reminderTime", newReminder.reminderTime.time)
+                            .putLong("creationTime", newReminder.creationTime.time)
+                            .putString("userId", newReminder.userId)
+                            .putBoolean("reminderSeen", newReminder.reminderSeen)
+                            .putString("priority", newReminder.priority.name)
+                            .build()
+                        val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                            .setInputData(reminderData)
+                            .build()
+                        WorkManager.getInstance(context).enqueue(workRequest)
+
+
                         shortToast(context, "Reminder updated successfully!")
 
                         navController.navigate("home")
