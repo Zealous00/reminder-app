@@ -1,4 +1,4 @@
-package com.fekete.david.reminderapp.ui.home
+package com.fekete.david.reminderapp.worker
 
 import android.Manifest
 import android.app.NotificationChannel

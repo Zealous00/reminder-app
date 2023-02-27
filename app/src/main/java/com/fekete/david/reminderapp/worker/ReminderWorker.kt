@@ -1,24 +1,15 @@
-package com.fekete.david.reminderapp.ui.home
+package com.fekete.david.reminderapp.worker
 
-import android.Manifest
 import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
-import com.fekete.david.reminderapp.Graph
-import com.fekete.david.reminderapp.R
 import com.fekete.david.reminderapp.data.entitiy.Priority
 import com.fekete.david.reminderapp.data.entitiy.Reminder
+import com.fekete.david.reminderapp.service.ReminderBroadcastReceiver
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ReminderWorker(
     private val context: Context, private val workerParams: WorkerParameters

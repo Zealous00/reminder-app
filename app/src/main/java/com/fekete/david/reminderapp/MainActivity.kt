@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
-import com.fekete.david.reminderapp.ui.home.NotificationService
+import com.fekete.david.reminderapp.service.NotificationService
 import com.fekete.david.reminderapp.ui.theme.ReminderAppTheme
 import com.google.firebase.auth.FirebaseAuth
 

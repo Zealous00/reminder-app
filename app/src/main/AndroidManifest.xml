@@ -33,9 +33,9 @@
                 android:value="" />
         </activity>
         <receiver
-            android:name=".ui.home.ReminderBroadcastReceiver"
+            android:name=".service.ReminderBroadcastReceiver"
             android:exported="false"/>
-        <service android:name=".ui.home.NotificationService"
+        <service android:name=".service.NotificationService"
             android:exported="false" />
 
     </application>

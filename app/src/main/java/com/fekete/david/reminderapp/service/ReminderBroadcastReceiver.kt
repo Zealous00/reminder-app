@@ -1,4 +1,4 @@
-package com.fekete.david.reminderapp.ui.home
+package com.fekete.david.reminderapp.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.fekete.david.reminderapp.worker.NotificationWorker
 
 class ReminderBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

@@ -1,4 +1,4 @@
-package com.fekete.david.reminderapp.ui.home
+package com.fekete.david.reminderapp.service
 
 import android.app.*
 import android.content.Context
