@@ -25,14 +25,15 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
             }
         }.build()
 
+        println(reminderData)
+
 //        val notificationRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
 //            .setInputData(reminderData)
 //            .build()
 //        WorkManager.getInstance(context!!).enqueue(notificationRequest)
 
-        val fromMinutes: Duration = Duration.ofMinutes(60)
         val periodicRequest =
-            PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS)
                 .setInputData(reminderData)
                 .build()
         WorkManager.getInstance(context!!).enqueueUniquePeriodicWork(
@@ -40,7 +41,6 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
             ExistingPeriodicWorkPolicy.KEEP,
             periodicRequest
         )
-//        WorkManager.getInstance(context!!).enqueue(periodicRequest)
 
     }
 }

@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -51,31 +52,28 @@ class NotificationWorker(private val context: Context, private val workerParams:
             .setContentText("priority: ${reminder.priority}!")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        with(NotificationManagerCompat.from(Graph.appContext)) {
-            if (ActivityCompat.checkSelfPermission(
-                    Graph.appContext,
-                    Manifest.permission.ACCESS_NOTIFICATION_POLICY
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return Result.failure()
+        try {
+            with(NotificationManagerCompat.from(Graph.appContext)) {
+                if (ActivityCompat.checkSelfPermission(
+                        Graph.appContext,
+                        Manifest.permission.ACCESS_NOTIFICATION_POLICY
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // TODO: Handle permission denied
+                    return Result.failure()
+                }
+                notify(notificationId.hashCode(), builder.build())
             }
-            notify(notificationId.hashCode(), builder.build())
-
-            scope.launch {
-                reminderViewModel.updateReminder(
-                    reminder
-                )
-            }
+        } catch (e: Exception) {
+            Log.e("NotificationWorker", "Failed to send notification", e)
+            return Result.failure()
         }
 
+        scope.launch {
+            reminderViewModel.updateReminder(
+                reminder
+            )
+        }
         return Result.success()
     }
 }

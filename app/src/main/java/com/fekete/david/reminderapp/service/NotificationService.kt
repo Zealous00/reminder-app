@@ -13,7 +13,7 @@ class NotificationService : Service() {
 
     companion object {
         private const val CHANNEL_ID = "com.fekete.david.reminderapp.notification_service.channel_id"
-        private const val NOTIFICATION_ID = 1
+        private const val NOTIFICATION_ID = 2
     }
 
     override fun onCreate() {
@@ -29,8 +29,8 @@ class NotificationService : Service() {
     private fun createNotificationChannel() {
         val name = "NotificationChannel"
         val descriptionText = "NotificationChannelDescription"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel("channel_id", name, importance).apply {
             description = descriptionText
         }
         val notificationManager = Graph.appContext
