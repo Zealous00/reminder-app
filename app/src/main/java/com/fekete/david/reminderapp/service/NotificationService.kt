@@ -4,7 +4,9 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.fekete.david.reminderapp.Graph
 import com.fekete.david.reminderapp.MainActivity
 import com.fekete.david.reminderapp.R
@@ -42,10 +44,10 @@ class NotificationService : Service() {
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE)
 
-        return NotificationCompat.Builder(this, CHANNEL_ID)
+        return NotificationCompat.Builder(this, "channel_id")
             .setContentTitle("Reminder app")
             .setContentText("is running in the background")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentIntent(pendingIntent)
             .build()
     }

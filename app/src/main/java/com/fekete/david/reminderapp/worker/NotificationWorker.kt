@@ -47,7 +47,7 @@ class NotificationWorker(private val context: Context, private val workerParams:
             Graph.appContext,
             "channel_id"
         )
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Reminder: ${reminder.message}")
             .setContentText("priority: ${reminder.priority}!")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
