@@ -8,14 +8,14 @@ import java.util.*
 data class Reminder(
     var id: String = "",
     val message: String = "",
-    val locationX: String = "",
-    val locationY: String = "",
+    var locationX: String = "",
+    var locationY: String = "",
     val reminderTime: Date = Date(),
     val creationTime: Date = Date(),
     val userId: String = "",
     val reminderSeen: Boolean = false,
     val priority: Priority = Priority.MEDIUM,
-    val hasNotification: Boolean = false,
+    val hasNotification: Boolean = true,
 ) : java.io.Serializable
 
 enum class Priority {

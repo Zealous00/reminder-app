@@ -1,10 +1,12 @@
 package com.fekete.david.reminderapp.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,7 +37,9 @@ import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.ReminderStatus
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
 import com.fekete.david.reminderapp.worker.ReminderWorker
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,25 +84,33 @@ fun ReminderCreationPart(
         onResult = {}
     )
 
+    var backReminder = Reminder()
+    navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Reminder>("reminder")
+        ?.observe(
+            navController.currentBackStackEntry!!
+        ) { reminder ->
+            backReminder = reminder
+        }
+
+
     val reminderViewModel = ReminderViewModel(StorageRepository())
 
     calendar.time = Date()
 
-    val reminderMessage = remember { mutableStateOf("") }
-    val reminderDate = remember { mutableStateOf("") }
-//    val reminderDate by remember { mutableStateOf(LocalDate.now()) }
-//    val formattedReminderDate by remember {
-//        derivedStateOf { DateTimeFormatter.ofPattern("MMMM dd yyyy").format(reminderDate) }
-//    }
-    val reminderTime = remember { mutableStateOf("") }
-//    val reminderTime = remember { mutableStateOf(LocalTime.NOON) }
-//    val formattedReminderTime by remember {
-//        derivedStateOf { DateTimeFormatter.ofPattern("hh:mm").format(reminderTime) }
-//    }
-    val locationX = remember { mutableStateOf("") }
-    val locationY = remember { mutableStateOf("") }
-    val priority = remember { mutableStateOf(Priority.MEDIUM) }
-    val hasNotification = remember { mutableStateOf(true) }
+    val reminderMessage = remember { mutableStateOf(backReminder.message) }
+
+
+    val reminderDate =
+        remember { mutableStateOf(SimpleDateFormat("yyyy-MM-dd").format(backReminder.reminderTime)) }
+
+    val reminderTime =
+        remember { mutableStateOf(SimpleDateFormat("HH:mm:ss").format(backReminder.reminderTime)) }
+
+    val priority = remember { mutableStateOf(backReminder.priority) }
+    val hasNotification = remember { mutableStateOf(backReminder.hasNotification) }
+
+    val locationX = remember { mutableStateOf(backReminder.locationX) }
+    val locationY = remember { mutableStateOf(backReminder.locationY) }
 
     val datePickerDialog = DatePickerDialog(
         context,
@@ -216,7 +228,28 @@ fun ReminderCreationPart(
                             permission = Manifest.permission.ACCESS_FINE_LOCATION,
                             requestPermission = { launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION) }
                         ).apply {
-                            navController.navigate("map")
+                            val formatter =
+                                SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
+                            var reminderSeen = true
+                            if (hasNotification.value) {
+                                reminderSeen = false
+                            }
+                            val serializedReminder = Gson().toJson(
+                                Reminder(
+                                    message = reminderMessage.value,
+                                    locationX = locationX.value,
+                                    locationY = locationY.value,
+                                    reminderTime = if (!reminderDate.value.isEmpty() && !reminderTime.value.isEmpty()) formatter.parse(
+                                        reminderDate.value + " " + reminderTime.value
+                                    ) as Date else Timestamp(Date().time),
+                                    creationTime = Timestamp(Date().time),
+                                    userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
+                                    reminderSeen = reminderSeen,
+                                    priority = priority.value,
+                                    hasNotification = hasNotification.value
+                                )
+                            )
+                            navController.navigate("reminderlocation/$serializedReminder")
                         }
                     },
                     modifier = Modifier.height(55.dp)
@@ -262,8 +295,8 @@ fun ReminderCreationPart(
                         }
                         val newReminder = Reminder(
                             message = reminderMessage.value,
-                            locationX = "locationX",
-                            locationY = "locationY",
+                            locationX = locationX.value,
+                            locationY = locationY.value,
                             reminderTime = formatter.parse(reminderDate.value + " " + reminderTime.value) as Date,
                             creationTime = Timestamp(Date().time),
                             userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),

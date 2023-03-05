@@ -101,7 +101,13 @@ fun ReminderApp(
                 onBackPress = { appState.navigateBack() },
             )
         }
-        composable("map") {
+        composable(
+            "reminderlocation/{serializedReminder}", arguments = listOf(
+                navArgument("serializedReminder") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                })
+        ) {
             ReminderLocation(navController = appState.navController)
         }
 
