@@ -1,9 +1,13 @@
 package com.fekete.david.reminderapp.ui.home
 
+import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.DatePicker
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -69,6 +74,11 @@ fun ReminderCreationPart(
     val day = calendar.get(Calendar.DAY_OF_MONTH)
     val hour = calendar[Calendar.HOUR_OF_DAY]
     val minute = calendar[Calendar.MINUTE]
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = {}
+    )
 
     val reminderViewModel = ReminderViewModel(StorageRepository())
 
@@ -199,6 +209,20 @@ fun ReminderCreationPart(
                     onCheckedChange = { hasNotification.value = it }
                 )
                 Text(text = "Send notification")
+                OutlinedButton(
+                    onClick = {
+                        requestPermission(
+                            context = context,
+                            permission = Manifest.permission.ACCESS_FINE_LOCATION,
+                            requestPermission = { launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION) }
+                        ).apply {
+                            navController.navigate("map")
+                        }
+                    },
+                    modifier = Modifier.height(55.dp)
+                ) {
+                    Text(text = "Location")
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Select priority:")
@@ -312,6 +336,20 @@ fun ReminderTopBar(onBackPress: () -> Unit) {
             )
         }
         Text(text = "Create reminder")
+    }
+}
+
+private fun requestPermission(
+    context: Context,
+    permission: String,
+    requestPermission: () -> Unit
+) {
+    if (ContextCompat.checkSelfPermission(
+            context,
+            permission
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        requestPermission()
     }
 }
 

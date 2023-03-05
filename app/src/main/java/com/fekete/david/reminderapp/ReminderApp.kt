@@ -14,6 +14,7 @@ import com.fekete.david.reminderapp.ui.home.CreateReminderScreen
 import com.fekete.david.reminderapp.ui.home.EditReminderScreen
 import com.fekete.david.reminderapp.ui.home.HomeScreen
 import com.fekete.david.reminderapp.ui.login.LoginScreen
+import com.fekete.david.reminderapp.ui.maps.ReminderLocation
 import com.fekete.david.reminderapp.ui.profile.ProfileScreen
 import com.fekete.david.reminderapp.ui.registration.RegistrationScreen
 import com.fekete.david.reminderapp.viewmodel.AuthViewModel
@@ -99,6 +100,9 @@ fun ReminderApp(
                 reminderViewModel = reminderViewModel,
                 onBackPress = { appState.navigateBack() },
             )
+        }
+        composable("map") {
+            ReminderLocation(navController = appState.navController)
         }
 
     }
