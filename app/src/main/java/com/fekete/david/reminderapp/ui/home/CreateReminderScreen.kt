@@ -221,7 +221,13 @@ fun ReminderCreationPart(
                     onCheckedChange = { hasNotification.value = it }
                 )
                 Text(text = "Send notification")
+                Spacer(modifier = Modifier.width(16.dp))
                 OutlinedButton(
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(corner = CornerSize(50.dp)),
                     onClick = {
                         requestPermission(
                             context = context,
@@ -251,8 +257,7 @@ fun ReminderCreationPart(
                             )
                             navController.navigate("reminderlocation/$serializedReminder")
                         }
-                    },
-                    modifier = Modifier.height(55.dp)
+                    }
                 ) {
                     Text(text = "Location")
                 }
