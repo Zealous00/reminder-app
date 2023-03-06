@@ -7,6 +7,7 @@
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -41,8 +42,16 @@
 
         </activity>
         <receiver
-            android:name=".service.ReminderBroadcastReceiver"
+            android:name=".service.TimeReminderBroadcastReceiver"
             android:exported="false"/>
+        <receiver
+            android:name=".service.LocationReminderBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.location.GeofencingEvent.ACTION_GEOFENCE_TRANSITION"/>
+            </intent-filter>
+        </receiver>
         <service android:name=".service.NotificationService"
             android:exported="false" />
 

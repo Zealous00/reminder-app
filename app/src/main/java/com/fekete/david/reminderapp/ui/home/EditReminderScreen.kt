@@ -30,7 +30,7 @@ import com.fekete.david.reminderapp.data.entitiy.Reminder
 import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
-import com.fekete.david.reminderapp.worker.ReminderWorker
+import com.fekete.david.reminderapp.worker.ScheduleReminderWorker
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -266,7 +266,7 @@ fun ReminderEditionPart(
                                 .putString("priority", newReminder.priority.name)
                                 .putBoolean("hasNotification", newReminder.hasNotification)
                                 .build()
-                            val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+                            val workRequest = OneTimeWorkRequestBuilder<ScheduleReminderWorker>()
                                 .setInputData(reminderData)
                                 .build()
                             WorkManager.getInstance(context).enqueue(workRequest)

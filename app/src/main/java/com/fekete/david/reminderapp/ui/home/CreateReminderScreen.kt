@@ -1,12 +1,10 @@
 package com.fekete.david.reminderapp.ui.home
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Bundle
 import android.widget.DatePicker
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,8 +34,8 @@ import com.fekete.david.reminderapp.repository.StorageRepository
 import com.fekete.david.reminderapp.ui.login.shortToast
 import com.fekete.david.reminderapp.viewmodel.ReminderStatus
 import com.fekete.david.reminderapp.viewmodel.ReminderViewModel
-import com.fekete.david.reminderapp.worker.ReminderWorker
-import com.google.android.gms.maps.model.LatLng
+import com.fekete.david.reminderapp.worker.LocationReminderWorker
+import com.fekete.david.reminderapp.worker.ScheduleReminderWorker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -332,11 +330,21 @@ fun ReminderCreationPart(
                                                 newReminder.hasNotification
                                             )
                                             .build()
-                                        val workRequest =
-                                            OneTimeWorkRequestBuilder<ReminderWorker>()
-                                                .setInputData(reminderData)
-                                                .build()
-                                        WorkManager.getInstance(context).enqueue(workRequest)
+                                        if (newReminder.locationX.isNotEmpty() && newReminder.locationY.isNotEmpty()) {
+                                            val workRequest =
+                                                OneTimeWorkRequestBuilder<LocationReminderWorker>()
+                                                    .setInputData(reminderData)
+                                                    .build()
+                                            WorkManager.getInstance(context).enqueue(workRequest)
+                                            reminderViewModel.getUserReminders(FirebaseAuth.getInstance().currentUser?.uid)
+                                        } else {
+                                            val workRequest =
+                                                OneTimeWorkRequestBuilder<ScheduleReminderWorker>()
+                                                    .setInputData(reminderData)
+                                                    .build()
+                                            WorkManager.getInstance(context).enqueue(workRequest)
+                                        }
+
                                     }
                                 }
                                 else -> {}
